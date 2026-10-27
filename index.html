@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Material didáctico completo de Cómputo Suave, Unidad 2: Lógica Difusa.">
+
+<title>Cómputo Suave | Unidad 2. Lógica Difusa</title>
+<style>
+:root{--navy:#102b4e;--blue:#1769aa;--teal:#087e78;--green:#22966f;--purple:#7050a5;--orange:#e58a25;--ink:#203047;--muted:#627187;--paper:#f4f7fb;--line:#dce5ef;--white:#fff;--shadow:0 12px 30px #17375e12}
+*{box-sizing:border-box;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 "Segoe UI",Arial,sans-serif}
+a{color:var(--blue)}button{font:inherit;cursor:pointer}
+header{background:linear-gradient(120deg,#092b4c,#145f79 65%,#0b887e);color:white;padding:44px 22px 38px}
+.hero{max-width:1180px;margin:auto;display:grid;grid-template-columns:1.5fr .8fr;gap:28px;align-items:center}
+.kicker{letter-spacing:.14em;text-transform:uppercase;font-size:.78rem;font-weight:700;color:#a8e8e1}
+h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.1;margin:10px 0}
+header p{max-width:780px;color:#e0f2f5}
+.hero-art{background:#ffffff12;border:1px solid #ffffff35;border-radius:24px;padding:22px;text-align:center}
+.hero-art .brain{font-size:5rem;line-height:1.2}
+.hero-art strong{display:block;font-size:1.2rem}
+.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:26px;padding:26px 20px}
+aside{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);overflow:auto;background:white;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+aside h2{font-size:1rem;margin:0 0 12px;color:var(--navy)}
+nav a{display:block;text-decoration:none;padding:8px 10px;margin:3px 0;border-radius:9px;color:#43536a;font-size:.91rem}
+nav a:hover,nav a.active{background:#e9f3fb;color:#075b96;font-weight:700}
+nav .sub{padding-left:23px;font-size:.84rem}
+main{min-width:0}
+section{background:white;border:1px solid var(--line);border-radius:18px;padding:clamp(20px,3vw,34px);margin-bottom:22px;box-shadow:var(--shadow);scroll-margin-top:18px}
+h2{color:var(--navy);font-size:1.8rem;line-height:1.25;margin:0 0 18px}
+h3{color:#155d83;margin:26px 0 9px;font-size:1.25rem}
+h4{color:#2b5473;margin:18px 0 7px}
+p{margin:9px 0 14px}
+.lead{font-size:1.08rem;color:#41536b}
+.callout{border-left:5px solid var(--teal);background:#eef9f7;padding:15px 18px;border-radius:0 12px 12px 0;margin:16px 0}
+.note{background:#fff8e9;border-left-color:var(--orange)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfdff}
+.card h3,.card h4{margin-top:0}
+.card.blue{border-top:4px solid var(--blue)}.card.green{border-top:4px solid var(--green)}.card.purple{border-top:4px solid var(--purple)}.card.orange{border-top:4px solid var(--orange)}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.94rem}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:#edf4fa;color:#173b5e}
+tr:nth-child(even) td{background:#fbfdff}
+.math{background:#f2f6fb;border:1px solid #d9e4f0;border-radius:10px;padding:12px 16px;text-align:center;font-family:Georgia,serif;font-size:1.12rem;overflow-x:auto;margin:12px 0}
+.figure{border:1px solid var(--line);border-radius:14px;padding:14px;margin:16px 0;background:#fcfdff}
+.figure svg{width:100%;height:auto;display:block;max-height:300px}
+.caption{font-size:.86rem;color:var(--muted);text-align:center;margin-top:8px}
+.pill{display:inline-block;border-radius:30px;background:#e6f4f2;color:#08756e;padding:3px 10px;font-size:.78rem;font-weight:700}
+.steps{counter-reset:step;list-style:none;padding:0}
+.steps li{counter-increment:step;position:relative;padding:10px 10px 10px 48px;margin:8px 0;background:#f6f9fc;border-radius:10px}
+.steps li:before{content:counter(step);position:absolute;left:12px;top:10px;background:var(--blue);color:white;width:26px;height:26px;border-radius:50%;text-align:center;font-weight:700}
+pre{background:#102238;color:#e8f2ff;padding:18px;border-radius:12px;overflow:auto;line-height:1.55;font-size:.88rem}
+code{font-family:Consolas,monospace}
+.copy{border:0;background:#1769aa;color:white;padding:8px 13px;border-radius:8px;margin:8px 0}
+details{border:1px solid var(--line);border-radius:11px;padding:12px 15px;margin:10px 0}
+summary{font-weight:700;color:#164e76;cursor:pointer}
+.quiz label{display:block;padding:8px;margin:6px 0;background:#f5f8fb;border-radius:8px}
+.quiz button,.action{border:0;background:var(--teal);color:white;border-radius:9px;padding:10px 16px;margin-top:10px}
+.result{font-weight:700;margin-top:10px}
+footer{background:var(--navy);color:#e7f1fa;text-align:center;padding:26px 18px}
+.small{font-size:.9rem;color:var(--muted)}
+.top{position:fixed;right:18px;bottom:18px;background:var(--navy);color:white;border:0;border-radius:50%;width:46px;height:46px;box-shadow:var(--shadow)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:relative;top:0;max-height:none}.hero{grid-template-columns:1fr}.hero-art{display:none}}
+@media(max-width:600px){header{padding:30px 18px}.layout{padding:14px 10px}section{padding:19px}table{font-size:.83rem}th,td{padding:7px}}
+@media print{aside,.top,.copy,.quiz button{display:none!important}.layout{display:block;padding:0}section{box-shadow:none;break-inside:avoid}body{background:white}header{background:#123;color:white}}
+.imagen-tema {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    object-fit: contain;
+}
+/* Clases específicas para el recuadro de Ejemplo práctico */
+.ejemplo-practico {
+    background-color: #FDFBF2;
+    border-left: 4px solid #F59E0B;
+    padding: 20px 24px;
+    margin: 24px 0;
+    border-radius: 0 8px 8px 0;
+    color: #432410;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.ejemplo-practico h4 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+    color: #174e79;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.ejemplo-practico p {
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+}
+.ejemplo-practico p:last-child {
+    margin-bottom: 0;
+}
+.ejemplo-practico strong {
+    color: #78350f;
+}
+
+</style>
+</head>
+<body>
+<header id="inicio">
+ <div class="hero">
+  <div><div class="kicker">Material de estudio · Universidad Tecnológica de Ciudad Juárez</div>
+   <h1>Cómputo Suave<br>Unidad 2. Lógica Difusa</h1>
+   <p>Conceptos, conjuntos difusos, funciones de pertenencia, operaciones, sistemas de inferencia y aplicaciones con ejemplos prácticos y programación en Python.</p>
+   <span class="pill">Material didáctico interactivo</span>
+  </div>
+  <div class="hero-art"><div class="brain">🧠</div><strong>De lo verdadero o falso<br>a los grados de pertenencia</strong><p>La lógica difusa permite modelar situaciones imprecisas del mundo real.</p></div>
+ </div>
+</header>
+<div class="layout">
+<aside>
+ <h2>Contenido de la unidad</h2>
+ <nav id="menu">
+  <a href="#introduccion">Introducción</a>
+  <a href="#objetivo">Objetivo de aprendizaje</a>
+  <a href="#tema21">2.1. Conceptos básicos</a>
+  <a class="sub" href="#clasica">Lógica clásica y difusa</a>
+  <a class="sub" href="#elementos">Elementos fundamentales</a>
+  <a class="sub" href="#funciona">¿Cómo funciona?</a>
+  <a href="#tema22">2.2. Conjuntos y pertenencia</a>
+  <a class="sub" href="#funciones">Funciones de pertenencia</a>
+  <a class="sub" href="#ejercicio22">Ejercicio de temperaturas</a>
+  <a href="#tema23">2.3. Operaciones difusas</a>
+  <a class="sub" href="#and">AND, OR y NOT</a>
+  <a href="#tema24">2.4. Inferencia difusa</a>
+  <a class="sub" href="#etapas">Etapas del sistema</a>
+  <a class="sub" href="#mamdani">Mamdani y Sugeno</a>
+  <a class="sub" href="#python">Programa en Python</a>
+  <a href="#tema25">2.5. Aplicaciones</a>
+  <a href="#resumen">Resumen y glosario</a>
+  <a href="#bibliografia">Bibliografía</a>
+ </nav>
+</aside>
+<main>
+<section id="introduccion">
+ <h2>Introducción a la unidad</h2>
+ <p class="lead">La <strong>lógica difusa (Fuzzy Logic)</strong> es una rama de la inteligencia artificial y del cómputo suave que permite representar y procesar información imprecisa, incierta o aproximada.</p>
+ <p>A diferencia de la lógica tradicional, que trabaja con dos valores posibles (verdadero o falso), la lógica difusa permite representar diferentes grados de pertenencia mediante valores comprendidos entre 0 y 1.</p>
+ <div class="figure">
+  <svg viewBox="0 0 760 210" role="img" aria-label="Comparación de lógica clásica y lógica difusa">
+   <rect x="8" y="8" width="350" height="185" rx="15" fill="#edf5fc" stroke="#1769aa"/><rect x="402" y="8" width="350" height="185" rx="15" fill="#eef8f4" stroke="#22966f"/>
+   <text x="183" y="42" text-anchor="middle" font-size="20" font-weight="bold" fill="#174e79">Lógica clásica</text><text x="577" y="42" text-anchor="middle" font-size="20" font-weight="bold" fill="#08765d">Lógica difusa</text>
+   <rect x="65" y="70" width="95" height="72" rx="10" fill="#1769aa"/><rect x="205" y="70" width="95" height="72" rx="10" fill="#7892a8"/>
+   <text x="112" y="114" text-anchor="middle" font-size="29" fill="white">1</text><text x="252" y="114" text-anchor="middle" font-size="29" fill="white">0</text>
+   <text x="112" y="164" text-anchor="middle" font-size="13" fill="#203047">Verdadero</text><text x="252" y="164" text-anchor="middle" font-size="13" fill="#203047">Falso</text>
+   <defs><linearGradient id="grad"><stop offset="0" stop-color="#d7e9f8"/><stop offset="1" stop-color="#168c75"/></linearGradient></defs>
+   <rect x="444" y="83" width="265" height="28" rx="14" fill="url(#grad)"/><g fill="#203047" font-size="13"><text x="444" y="70">0</text><text x="572" y="70">0.5</text><text x="700" y="70">1</text></g>
+   <g fill="#08765d" font-size="14" font-weight="bold"><text x="577" y="143" text-anchor="middle">Grados de pertenencia</text><text x="577" y="166" text-anchor="middle">0.0 · 0.3 · 0.7 · 1.0</text></g>
+  </svg><div class="caption">Figura 1. La lógica clásica es binaria; la lógica difusa representa grados entre 0 y 1.</div>
+ </div>
+ <p>Por ejemplo, una temperatura de 29 °C podría pertenecer al conjunto “templada” con grado 0.3 y al conjunto “caliente” con grado 0.8. Los grados no tienen que sumar 1.</p>
+ <div class="callout"><strong>Importante:</strong> un grado de pertenencia de 0.7 no significa que exista un 70 % de probabilidad de que la temperatura sea caliente. Significa que el valor pertenece al conjunto difuso “caliente” con grado 0.7.</div>
+</section>
+<section id="objetivo">
+ <h2>Objetivo general de aprendizaje</h2>
+ <p>Comprender los fundamentos de la lógica difusa, identificar los conjuntos difusos y sus funciones de pertenencia, aplicar operaciones entre conjuntos, diseñar sistemas de inferencia difusa y reconocer sus aplicaciones en problemas reales mediante ejemplos y ejercicios prácticos.</p>
+ <h3>Importancia en el cómputo suave</h3>
+ <p>El cómputo suave busca resolver problemas donde la información no siempre es exacta, completa o determinista. La lógica difusa permite trabajar con expresiones cotidianas como:</p>
+ <div class="grid"><div class="card blue">La temperatura está un poco elevada.</div><div class="card green">La velocidad del vehículo es bastante alta.</div><div class="card purple">El nivel de iluminación es bajo.</div><div class="card orange">La batería está casi descargada.</div><div class="card blue">El riesgo de una falla es considerable.</div></div>
+ <p>Estas expresiones son difíciles de representar mediante condiciones rígidas, pero pueden modelarse matemáticamente con lógica difusa.</p>
+</section>
+<section id="tema21">
+ <h2>2.1. Conceptos básicos de la lógica difusa</h2>
+ <h3>2.1.1. ¿Qué es la lógica difusa?</h3>
+ <p>Es un modelo matemático y computacional para representar situaciones en las que una afirmación no necesariamente es completamente verdadera o completamente falsa. Fue propuesta por el matemático y profesor <strong>Lotfi A. Zadeh en 1965</strong>, mediante su trabajo <em>Fuzzy Sets</em> (Conjuntos difusos).</p>
+ <p>Una velocidad de 80 km/h puede considerarse alta en una zona urbana, moderada en una carretera o baja en una autopista. La interpretación depende del contexto y la lógica difusa permite representar esa flexibilidad matemáticamente.</p>
+ <div class="figure">
+    <img src="img/Difusa1.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+    <div class="caption">Diferencia de transiciones entre la lógica booleana y la lógica difusa.</div>
+ </div>
+
+<!-- Cuadro de Ejemplo -->
+                <div class="ejemplo-practico">
+                    
+                    💡Ejemplo práctico
+                    </h4>
+                    <p>
+                        Imagina que queremos catalogar si una persona es "Alta".<br><br>
+                        <strong>Lógica clásica:</strong> Establece que alguien es alto si mide más de 1.80m. Si una persona mide 1.79m, la máquina dirá categóricamente 0 (Falso / No es alto).<br>
+                        <strong>Lógica difusa:</strong> Entiende que 1.79m está muy cerca del estándar de "alto". Le asignará un grado de verdad, por ejemplo, 0.95. Esto significa que pertenece en un 95% al concepto de persona alta, lo cual es mucho más cercano a la realidad humana.
+                    </p>
+                </div>
+
+ <h3 id="clasica">2.1.2. Diferencia entre lógica clásica y lógica difusa</h3>
+ <div class="grid"><div class="card blue"><h4>Lógica clásica</h4><div class="math">0 = Falso &nbsp;&nbsp; 1 = Verdadero</div><p>Una condición se cumple o no se cumple. Ejemplo: una temperatura se clasifica como caliente o no caliente.</p></div><div class="card green"><h4>Lógica difusa</h4><div class="math">0 ≤ μ(x) ≤ 1</div><p>Una condición puede cumplirse en diferentes grados. Ejemplo: caliente = 0.7 y templada = 0.4.</p></div></div>
+ <p>Ejemplo: una temperatura de 28 °C puede clasificarse como caliente o no caliente en lógica clásica. En lógica difusa puede tener pertenencia 0.7 al conjunto caliente y 0.4 al conjunto templado.</p>
+ <h3>2.1.3. Características principales</h3>
+ <ol><li>Manejo de imprecisión: representa conceptos que no tienen límites exactos.</li><li>Grados de pertenencia: utiliza valores entre 0 y 1.</li><li>Flexibilidad: permite definir reglas cercanas al razonamiento humano.</li><li>Adaptabilidad: puede utilizarse en diferentes problemas.</li><li>Interpretabilidad: sus reglas pueden expresarse mediante lenguaje natural.</li><li>Tolerancia a información aproximada: no requiere datos perfectamente precisos.</li><li>Modelado de variables lingüísticas: utiliza categorías como bajo, medio, alto, lento, rápido, frío o caliente.</li></ol>
+ <h3 id="elementos">2.1.4. Elementos fundamentales</h3>
+ <table><tr><th>Elemento</th><th>Descripción</th><th>Ejemplo</th></tr>
+ <tr><td>Variable lingüística</td><td>Variable representada mediante palabras.</td><td>Temperatura.</td></tr><tr><td>Valor lingüístico</td><td>Categoría que puede tomar una variable.</td><td>Fría, templada, caliente.</td></tr><tr><td>Universo de discurso</td><td>Rango de valores que puede tomar una variable.</td><td>0 a 50 °C.</td></tr><tr><td>Conjunto difuso</td><td>Grupo de valores asociados a una categoría.</td><td>Temperatura caliente.</td></tr><tr><td>Grado de pertenencia</td><td>Nivel de pertenencia de un valor a un conjunto.</td><td>0.8.</td></tr><tr><td>Función de pertenencia</td><td>Función matemática que calcula el grado de pertenencia.</td><td>Triangular.</td></tr><tr><td>Regla difusa</td><td>Condición que establece una relación entre variables.</td><td>Si hace calor, entonces encender ventilador.</td></tr></table>
+ <h3 id="funciona">2.1.5. ¿Cómo funciona la lógica difusa?</h3>
+ <ol class="steps"><li><strong>Recibe datos de entrada:</strong> por ejemplo, temperatura de un sensor.</li><li><strong>Fuzzificación:</strong> convierte el dato numérico en grados de pertenencia.</li><li><strong>Inferencia:</strong> evalúa las reglas difusas para determinar una respuesta.</li><li><strong>Defuzzificación:</strong> convierte el resultado difuso en un valor numérico cuando se necesita una salida concreta.</li></ol>
+ <h3>2.1.6. Ejemplo práctico: control inteligente de temperatura</h3>
+ <p>Una institución educativa automatiza la ventilación de un laboratorio de cómputo. El sistema recibe la temperatura y determina la intensidad del ventilador.</p>
+ <table><tr><th>Temperatura</th><th>Clasificación</th><th>Acción esperada</th></tr><tr><td>15 °C</td><td>Fría</td><td>Apagado</td></tr><tr><td>20 °C</td><td>Templada</td><td>Velocidad baja</td></tr><tr><td>25 °C</td><td>Cálida</td><td>Velocidad media</td></tr><tr><td>30 °C</td><td>Caliente</td><td>Velocidad alta</td></tr><tr><td>35 °C</td><td>Muy caliente</td><td>Velocidad máxima</td></tr></table>
+ <p>En un sistema difuso real, las categorías pueden superponerse. A 25 °C, por ejemplo, la temperatura podría pertenecer simultáneamente a “templada” y “cálida”. Esto evita cambios bruscos de comportamiento.</p>
+</section>
+<section id="tema22">
+ <h2>2.2. Conjuntos difusos y funciones de pertenencia</h2>
+ <h3>2.2.1. ¿Qué es un conjunto difuso?</h3>
+ <p>Es una colección de elementos en la que cada elemento puede pertenecer al conjunto en diferentes grados. En conjuntos tradicionales, un elemento pertenece o no pertenece; en conjuntos difusos la pertenencia puede tomar cualquier valor entre 0 y 1.</p>
+ <div class="figure">
+    <img src="img/Difusa2.jpg" class="imagen-tema" alt="Superposición de conjuntos difusos modelando la temperatura.">
+    <div class="caption">Superposición de conjuntos difusos modelando la temperatura.</div>
+ </div>
+ <h4>Ejemplo: clasificación de temperaturas</h4>
+ <table><tr><th>Temperatura</th><th>Conjunto</th><th>Grado de pertenencia</th></tr><tr><td>27 °C</td><td>Fría</td><td>0.0</td></tr><tr><td>27 °C</td><td>Templada</td><td>0.3</td></tr><tr><td>27 °C</td><td>Caliente</td><td>0.7</td></tr></table>
+ <p>27 °C pertenece a “templada” con grado 0.3 y a “caliente” con grado 0.7. La suma de los grados no necesariamente debe ser 1.</p>
+ <h3>2.2.2. Diferencia entre conjunto clásico y conjunto difuso</h3>
+ <p>En un modelo clásico de calificaciones se puede establecer: menor a 70 = reprobado; igual o mayor a 70 = aprobado. En un modelo difuso se pueden definir reprobado, regular, bueno y excelente. Una calificación de 75 podría pertenecer a “regular” con 0.6 y a “bueno” con 0.4.</p>
+ <h3>2.2.3. Función de pertenencia</h3>
+ <p>Determina el grado en que un elemento pertenece a un conjunto difuso. Se representa mediante:</p>
+ <div class="math">μ<sub>A</sub>(x)</div>
+ <p>Donde μ es la función de pertenencia, A es el conjunto difuso, x es el elemento evaluado y μ<sub>A</sub>(x) es el grado de pertenencia.</p>
+ <div class="math">0 ≤ μ<sub>A</sub>(x) ≤ 1</div>
+ <table><tr><th>Valor</th><th>Interpretación</th></tr><tr><td>0.0</td><td>No pertenece al conjunto.</td></tr><tr><td>0.2</td><td>Pertenece muy poco.</td></tr><tr><td>0.4</td><td>Pertenece parcialmente.</td></tr><tr><td>0.6</td><td>Tiene una pertenencia considerable.</td></tr><tr><td>0.8</td><td>Tiene una pertenencia alta.</td></tr><tr><td>1.0</td><td>Pertenece completamente.</td></tr></table>
+ <h3 id="funciones">2.2.4. Tipos de funciones de pertenencia</h3>
+ <h4>A. Función triangular</h4>
+ <p>Es una de las funciones más sencillas y utilizadas. Tiene tres parámetros: a (punto inicial), b (punto máximo) y c (punto final).</p>
+ <div class="math">μ(x) = 0 si x ≤ a; (x−a)/(b−a) si a &lt; x ≤ b; (c−x)/(c−b) si b &lt; x &lt; c; 0 si x ≥ c.</div>
+ <div class="figure"><svg viewBox="0 0 600 230" role="img" aria-label="Función de pertenencia triangular"><path d="M55 185H550 M55 185V20" stroke="#53677c" stroke-width="2" fill="none"/><path d="M80 185L290 35L500 185" stroke="#1684c2" stroke-width="4" fill="#1684c2" fill-opacity=".12"/><g fill="#203047" font-size="14"><text x="42" y="24">1</text><text x="40" y="189">0</text><text x="78" y="207">a</text><text x="287" y="207">b</text><text x="497" y="207">c</text><text x="300" y="228" text-anchor="middle">Valor de x</text><text x="10" y="100" transform="rotate(-90 10 100)">Pertenencia</text></g></svg><div class="caption">Figura 2. Función triangular con máximo en b.</div></div>
+ <p><strong>Ejemplo: temperatura templada.</strong> a = 15 °C, b = 25 °C y c = 35 °C. Su máxima pertenencia ocurre en 25 °C. Para 20 °C:</p>
+ <div class="math">μ(20) = (20 − 15) / (25 − 15) = 5/10 = 0.5</div>
+ <p>20 °C pertenece al conjunto “templada” con grado 0.5. Se utiliza en clasificación de temperaturas, evaluación de riesgo, control de velocidad y evaluación académica.</p>
+ <h4>B. Función trapezoidal</h4>
+ <p>Utiliza cuatro parámetros: a (inicio), b (inicio de la zona máxima), c (final de la zona máxima) y d (final).</p>
+ <div class="math">μ(x) = 0 si x ≤ a; (x−a)/(b−a) si a &lt; x &lt; b; 1 si b ≤ x ≤ c; (d−x)/(d−c) si c &lt; x &lt; d; 0 si x ≥ d.</div>
+ <div class="figure"><svg viewBox="0 0 600 230" role="img" aria-label="Función de pertenencia trapezoidal"><path d="M55 185H550 M55 185V20" stroke="#53677c" stroke-width="2" fill="none"/><path d="M80 185L180 35H370L480 185" stroke="#22966f" stroke-width="4" fill="#22966f" fill-opacity=".12"/><g fill="#203047" font-size="14"><text x="42" y="24">1</text><text x="40" y="189">0</text><text x="78" y="207">a</text><text x="178" y="207">b</text><text x="368" y="207">c</text><text x="478" y="207">d</text><text x="300" y="228" text-anchor="middle">Valor de x</text></g></svg><div class="caption">Figura 3. La pertenencia máxima se mantiene entre b y c.</div></div>
+ <p><strong>Ejemplo: humedad adecuada.</strong> a = 30 %, b = 40 %, c = 60 % y d = 70 %. La pertenencia es máxima entre 40 % y 60 %. Si la humedad es 50 %, μ(50) = 1. Se utiliza en control de humedad, agricultura inteligente, climatización e inventarios.</p>
+ <h4>C. Función gaussiana</h4>
+ <p>Tiene forma de campana y representa transiciones suaves.</p>
+ <div class="math">μ(x) = e<sup>−(x−c)² / (2σ²)</sup></div>
+ <p>x es el valor evaluado, c es el centro, σ determina la amplitud y e es la constante matemática.</p>
+ <div class="figure"><svg viewBox="0 0 600 230" role="img" aria-label="Función gaussiana"><path d="M55 185H550 M55 185V20" stroke="#53677c" stroke-width="2" fill="none"/><path d="M70 182 C145 180 180 150 220 85 C250 35 285 20 310 35 C360 65 385 145 535 182" stroke="#7958aa" stroke-width="4" fill="none"/><g fill="#203047" font-size="14"><text x="42" y="24">1</text><text x="40" y="189">0</text><text x="310" y="207" text-anchor="middle">Centro c</text><text x="300" y="228" text-anchor="middle">Valor de x</text></g></svg><div class="caption">Figura 4. Función gaussiana con transición suave.</div></div>
+ <p><strong>Ejemplo: rendimiento de un servidor.</strong> Centro = 50 % y desviación = 15 %. Si el uso del procesador es 50 %:</p><div class="math">μ(50) = e<sup>0</sup> = 1</div>
+ <p>Pertenece completamente al conjunto “uso normal”. Al aumentar a 65 %, su pertenencia disminuye progresivamente. Se utiliza en reconocimiento de patrones, inteligencia artificial y procesamiento de señales.</p>
+ <h4>D. Función sigmoidal</h4>
+ <p>Tiene forma de S y representa una transición progresiva entre dos estados.</p>
+ <div class="math">μ(x) = 1 / (1 + e<sup>−a(x−c)</sup>)</div>
+ <p>a controla la inclinación, c determina el punto central y x es el valor evaluado.</p>
+ <div class="figure"><svg viewBox="0 0 600 230" role="img" aria-label="Función sigmoidal"><path d="M55 185H550 M55 185V20" stroke="#53677c" stroke-width="2" fill="none"/><path d="M70 180 C190 180 210 175 245 145 C285 105 290 65 340 42 C390 20 445 25 535 25" stroke="#e58a25" stroke-width="4" fill="none"/><g fill="#203047" font-size="14"><text x="42" y="24">1</text><text x="40" y="189">0</text><text x="300" y="228" text-anchor="middle">Valor de x</text></g></svg><div class="caption">Figura 5. Función sigmoidal de transición gradual.</div></div>
+ <p><strong>Ejemplo: riesgo de sobrecalentamiento.</strong> 20 % = riesgo bajo; 50 % = moderado; 80 % = elevado; 95 % = muy elevado. Se utiliza en evaluación de riesgos, diagnóstico, seguridad informática y detección de anomalías.</p>
+ <h3>2.2.5. Comparación de funciones</h3>
+ <table><tr><th>Función</th><th>Característica</th><th>Aplicación</th></tr><tr><td>Triangular</td><td>Forma de triángulo.</td><td>Temperatura y velocidad.</td></tr><tr><td>Trapezoidal</td><td>Zona central plana.</td><td>Humedad y niveles adecuados.</td></tr><tr><td>Gaussiana</td><td>Forma de campana.</td><td>Reconocimiento de patrones.</td></tr><tr><td>Sigmoidal</td><td>Forma de S.</td><td>Riesgos y transiciones.</td></tr></table>
+ <h3 id="ejercicio22">2.2.6. Ejercicio práctico: clasificación difusa de temperaturas</h3>
+ <p>Se desea clasificar la temperatura de un salón mediante tres conjuntos:</p>
+ <table><tr><th>Conjunto</th><th>Parámetros</th><th>Función</th></tr><tr><td>Fría</td><td>(0, 0, 20)</td><td>Trapezoidal</td></tr><tr><td>Templada</td><td>(15, 25, 35)</td><td>Triangular</td></tr><tr><td>Caliente</td><td>(25, 40, 40)</td><td>Trapezoidal</td></tr></table>
+ <p>Para el conjunto templado se usa la función triangular:</p>
+ <div class="math">μ<sub>templada</sub>(x) = 0 si x ≤ 15; (x−15)/10 si 15 &lt; x ≤ 25; (35−x)/10 si 25 &lt; x &lt; 35; 0 si x ≥ 35.</div>
+ <p>Para 30 °C:</p><div class="math">μ<sub>templada</sub>(30) = (35−30)/10 = 0.5</div>
+ <p><strong>Pregunta de análisis:</strong> ¿Qué sucedería si la temperatura fuera 20 °C? ¿A qué conjuntos podría pertenecer simultáneamente?</p>
+</section>
+<section id="tema23">
+ <h2>2.3. Operaciones con conjuntos difusos</h2>
+ <p>Las operaciones permiten combinar, comparar y modificar grados de pertenencia. En lógica clásica se utilizan AND, OR y NOT; en lógica difusa se implementan mediante operadores matemáticos.</p>
+ <p>Consideremos A = temperatura alta y B = humedad elevada, con:</p><div class="math">μ<sub>A</sub>(x) = 0.7 &nbsp;&nbsp;&nbsp; μ<sub>B</sub>(x) = 0.4</div>
+  <div class="figure">
+    <img src="img/Difusa3.jpg" class="imagen-tema" alt="Superposición de conjuntos difusos modelando la temperatura.">
+    <div class="caption">Superposición de conjuntos difusos modelando la temperatura.</div>
+ </div>
+ 
+ <h3 id="and">2.3.1. Intersección (AND)</h3>
+ <p>Representa “Y”. Se utiliza cuando dos condiciones deben cumplirse simultáneamente. El operador mínimo es uno de los métodos más utilizados:</p>
+ <div class="math">μ<sub>A∩B</sub>(x) = min(μ<sub>A</sub>(x), μ<sub>B</sub>(x))</div>
+ <p>Ejemplo: ventilación cuando la temperatura es alta Y la humedad elevada.</p><div class="math">min(0.7, 0.4) = 0.4</div>
+ <p>La condición conjunta tiene grado de activación 0.4. Otra alternativa es el producto algebraico:</p><div class="math">μ<sub>A∩B</sub>(x) = μ<sub>A</sub>(x) × μ<sub>B</sub>(x) = 0.7 × 0.4 = 0.28</div>
+ <p>El mínimo y el producto son operadores diferentes; ambos pueden modelar la intersección dependiendo del sistema.</p>
+ <h3>2.3.2. Unión (OR)</h3>
+ <p>Representa “O”. Basta con que una de las condiciones tenga un grado de pertenencia elevado. La operación más utilizada es el máximo:</p>
+ <div class="math">μ<sub>A∪B</sub>(x) = max(μ<sub>A</sub>(x), μ<sub>B</sub>(x)) = max(0.7, 0.4) = 0.7</div>
+ <p>La condición combinada tiene grado 0.7. También existe la suma algebraica:</p>
+ <div class="math">μ<sub>A∪B</sub>(x) = μ<sub>A</sub>(x) + μ<sub>B</sub>(x) − μ<sub>A</sub>(x)μ<sub>B</sub>(x) = 0.82</div>
+ <h3>2.3.3. Complemento (NOT)</h3>
+ <p>Representa la negación de un conjunto y expresa lo contrario de una condición.</p>
+ <div class="math">μ<sub>Ā</sub>(x) = 1 − μ<sub>A</sub>(x) = 1 − 0.7 = 0.3</div>
+ <p>El complemento de temperatura alta tiene grado 0.3.</p>
+ <h3>2.3.4. Resumen de operaciones</h3>
+ <table><tr><th>Operación</th><th>Operador</th><th>Fórmula</th></tr><tr><td>Intersección</td><td>AND</td><td>min(A, B)</td></tr><tr><td>Unión</td><td>OR</td><td>max(A, B)</td></tr><tr><td>Complemento</td><td>NOT</td><td>1 − A</td></tr></table>
+ <h3>2.3.5. Ejemplo práctico: sistema de seguridad de un laboratorio</h3>
+ <p>Un laboratorio registra temperatura y humedad. A = temperatura alta; B = humedad elevada. Reglas: (1) si A Y B, generar alerta; (2) si A O B, generar advertencia; (3) si la temperatura NO es alta, mantener estado normal respecto a esa condición.</p>
+ <p>Supongamos A = 0.8 y B = 0.6:</p>
+ <table><tr><th>Operación</th><th>Cálculo</th><th>Resultado</th></tr><tr><td>AND</td><td>min(0.8, 0.6)</td><td>0.6</td></tr><tr><td>OR</td><td>max(0.8, 0.6)</td><td>0.8</td></tr><tr><td>NOT A</td><td>1 − 0.8</td><td>0.2</td></tr><tr><td>NOT B</td><td>1 − 0.6</td><td>0.4</td></tr></table>
+ <p>La condición conjunta tiene grado 0.6, la condición alternativa 0.8 y el complemento de temperatura alta 0.2.</p>
+ <div class="ejemplo-practico">
+                    
+                    💡Ejemplo práctico
+                    </h4>
+                    <p>
+                        Imagina un sistema que evalúa si un coche de segunda mano es una "Buena Compra". Sus variables son <em>Precio Bajo</em> y <em>Buen Estado</em>. Si un coche tiene un grado de <em>Precio Bajo</em> de 0.8 y un grado de <em>Buen Estado</em> de 0.4.<br><br>
+                        Queremos saber si es (Precio Bajo <strong>AND</strong> Buen Estado): Calculamos <code class="bg-amber-200 px-1 rounded">min(0.8, 0.4) = 0.4</code>. El grado de pertenencia a "Buena Compra" será de 0.4.
+                    </p>
+                </div>
+</section>
+<section id="tema24">
+ <h2>2.4. Sistemas de inferencia difusa</h2>
+ <h3>2.4.1. ¿Qué es un sistema de inferencia difusa?</h3>
+ <p>Un sistema de inferencia difusa (SID) es un modelo computacional que utiliza conjuntos difusos, funciones de pertenencia y reglas lingüísticas para tomar decisiones. Transforma información de entrada en una respuesta mediante reglas de la forma <strong>SI (condición) ENTONCES (resultado)</strong>.</p>
+ <p>Ejemplos: SI la temperatura es alta, ENTONCES la velocidad del ventilador es alta; SI la temperatura es baja, ENTONCES la velocidad es baja; SI la temperatura es templada, ENTONCES la velocidad es media.</p>
+ <h3>2.4.2. Arquitectura y etapas del sistema</h3>
+ <div class="figure"><svg viewBox="0 0 850 180" role="img" aria-label="Etapas de un sistema de inferencia difusa"><g font-size="16" font-weight="bold" text-anchor="middle"><rect x="5" y="35" width="185" height="90" rx="12" fill="#dceefa" stroke="#1769aa"/><text x="97" y="73" fill="#174e79">1. Fuzzificación</text><text x="97" y="98" font-size="12" fill="#203047">Dato a pertenencias</text><path d="M190 80H220" stroke="#526b82" stroke-width="3"/><path d="M212 72L222 80L212 88" stroke="#526b82" fill="none" stroke-width="3"/><rect x="225" y="35" width="185" height="90" rx="12" fill="#e1f5ed" stroke="#22966f"/><text x="317" y="73" fill="#08765d">2. Inferencia</text><text x="317" y="98" font-size="12" fill="#203047">Evalúa reglas SI-ENTONCES</text><path d="M410 80H440" stroke="#526b82" stroke-width="3"/><path d="M432 72L442 80L432 88" stroke="#526b82" fill="none" stroke-width="3"/><rect x="445" y="35" width="185" height="90" rx="12" fill="#fff0dd" stroke="#e58a25"/><text x="537" y="73" fill="#a85b08">3. Agregación</text><text x="537" y="98" font-size="12" fill="#203047">Combina resultados</text><path d="M630 80H660" stroke="#526b82" stroke-width="3"/><path d="M652 72L662 80L652 88" stroke="#526b82" fill="none" stroke-width="3"/><rect x="665" y="35" width="180" height="90" rx="12" fill="#eee8fa" stroke="#7958aa"/><text x="755" y="73" fill="#64438f">4. Defuzzificación</text><text x="755" y="98" font-size="12" fill="#203047">Salida numérica</text></g></svg><div class="caption">Figura 6. Flujo de un sistema de inferencia difusa.</div></div>
+ <h4 id="etapas">Etapa 1. Fuzzificación</h4><p>Convierte valores numéricos de entrada en grados de pertenencia. Ejemplo: sensor = 30 °C; fría = 0.0, templada = 0.5 y caliente = 0.7 (valores ilustrativos de una definición de conjuntos).</p>
+ <h4>Etapa 2. Base de reglas e inferencia</h4><p>La base almacena el conocimiento mediante condiciones lingüísticas. Ejemplo:</p>
+ <table><tr><th>Regla</th><th>Condición</th><th>Resultado</th></tr><tr><td>R1</td><td>SI temperatura es fría</td><td>Ventilador apagado</td></tr><tr><td>R2</td><td>SI temperatura es templada</td><td>Ventilador medio</td></tr><tr><td>R3</td><td>SI temperatura es caliente</td><td>Ventilador rápido</td></tr><tr><td>R4</td><td>SI temperatura es muy caliente</td><td>Ventilador máximo</td></tr></table>
+ <p>El motor de inferencia evalúa qué reglas se activan y con qué intensidad.</p>
+ <h4>Etapa 3. Agregación</h4><p>Combina los resultados de las reglas activadas. Por ejemplo: velocidad baja con grado 0.2, media con grado 0.5 y alta con grado 0.7. Se combinan para obtener un resultado difuso general.</p>
+ <h4>Etapa 4. Defuzzificación</h4><p>Transforma el resultado difuso en un valor numérico concreto. Ejemplo: salida difusa “media-alta” y salida numérica 75 % de potencia. Uno de los métodos más utilizados es el centroide o centro de gravedad:</p>
+ <div class="math">z* = [∫ z μ(z) dz] / [∫ μ(z) dz]</div>
+ <p>z* es el resultado numérico, z son los valores posibles de salida y μ(z) es el grado de pertenencia de cada valor. En aplicaciones discretas puede utilizarse:</p><div class="math">z* = [Σ z<sub>i</sub> μ(z<sub>i</sub>)] / [Σ μ(z<sub>i</sub>)]</div>
+ <p>Este método calcula un promedio ponderado de los valores de salida.</p>
+ <h3 id="mamdani">2.4.3. Tipos de sistemas de inferencia difusa</h3>
+ <h4>A. Sistema Mamdani</h4><p>Utiliza reglas cuyas salidas también son conjuntos difusos. Ejemplo: SI la temperatura es alta, ENTONCES la velocidad del ventilador es rápida. La salida “rápida” se representa mediante una función de pertenencia.</p>
+ <ul><li>Es intuitivo y fácil de interpretar.</li><li>Utiliza variables lingüísticas.</li><li>Sus reglas son comprensibles para las personas.</li><li>Requiere defuzzificación para obtener una salida numérica.</li></ul>
+ <p>Aplicaciones: control de temperatura, sistemas de ventilación, electrodomésticos y sistemas de decisión.</p>
+ <h4>B. Sistema Sugeno</h4><p>Utiliza funciones matemáticas o constantes como resultado de las reglas. Ejemplo: SI la temperatura es alta, ENTONCES velocidad = 2(temperatura) + 10. Si la temperatura es 30 °C:</p><div class="math">Velocidad = 2(30) + 10 = 70</div>
+ <p>La salida de cada regla es un valor o función matemática y se obtiene una combinación ponderada de las salidas activadas.</p>
+ <ul><li>Facilita los cálculos matemáticos.</li><li>Es eficiente computacionalmente.</li><li>Se integra con técnicas de optimización.</li><li>Es útil para sistemas adaptativos y modelos de control.</li></ul>
+ <h4>Comparación Mamdani y Sugeno</h4>
+ <table><tr><th>Característica</th><th>Mamdani</th><th>Sugeno</th></tr><tr><td>Salida de reglas</td><td>Conjuntos difusos</td><td>Constantes o funciones</td></tr><tr><td>Interpretación</td><td>Muy intuitiva</td><td>Más matemática</td></tr><tr><td>Defuzzificación</td><td>Generalmente centroide</td><td>Promedio ponderado</td></tr><tr><td>Uso</td><td>Control y decisión</td><td>Control y optimización</td></tr><tr><td>Complejidad computacional</td><td>Puede ser mayor</td><td>Generalmente menor</td></tr></table>
+</section>
+<section id="tema25">
+ <h2>2.5. Aplicaciones de la lógica difusa</h2>
+ <p>La lógica difusa tiene numerosas aplicaciones en ciencia, industria, educación y tecnología. Su principal ventaja es desarrollar sistemas capaces de tomar decisiones utilizando información aproximada y condiciones que no siempre tienen límites definidos.</p>
+ <h3>2.5.1. Automatización de electrodomésticos</h3><p>Permite ajustar automáticamente el funcionamiento de aparatos según las condiciones del entorno.</p>
+ <ul><li>Aires acondicionados: ajustan potencia de enfriamiento según temperatura y humedad.</li><li>Lavadoras: determinan tiempo de lavado según cantidad de ropa y suciedad.</li><li>Refrigeradores: regulan enfriamiento según cantidad de alimentos y aperturas de puerta.</li><li>Hornos: ajustan temperatura y tiempo de cocción.</li></ul>
+ <div class="callout"><strong>Caso: lavadora inteligente.</strong> Entradas: cantidad de ropa (poca, media, mucha) y suciedad (baja, media, alta). Reglas: poca ropa Y suciedad baja → tiempo corto; mucha ropa Y suciedad alta → tiempo largo; cantidad media Y suciedad media → tiempo normal. El sistema determina automáticamente el tiempo de lavado.</div>
+ <div class="figure">
+    <img src="img/electrodomesticos.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.2. Industria y control de procesos</h3><p>Permite controlar procesos de producción que requieren ajustes constantes.</p><ul><li>Control de temperatura en maquinaria.</li><li>Regulación de presión.</li><li>Control de velocidad de motores.</li><li>Supervisión de procesos industriales.</li><li>Identificación de condiciones anormales.</li></ul>
+ <div class="callout"><strong>Caso: temperatura industrial.</strong> Variables: temperatura baja, normal o alta; potencia de enfriamiento baja, media o alta. Reglas: temperatura baja → enfriamiento bajo; normal → medio; alta → alto. El sistema ajusta continuamente la potencia.</div>
+ <div class="figure">
+    <img src="img/industria.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.3. Robótica e inteligencia artificial</h3><p>Permite que los robots tomen decisiones ante situaciones cambiantes.</p><ul><li>Control de movimiento.</li><li>Navegación autónoma.</li><li>Evitación de obstáculos.</li><li>Control de velocidad.</li><li>Manipulación de objetos.</li></ul>
+ <div class="callout"><strong>Caso: robot que evita obstáculos.</strong> Entrada: distancia del obstáculo. 0–20 cm = muy cerca; 15–50 cm = cerca; 40–100 cm = lejos. Reglas: muy cerca → detenerse; cerca → reducir velocidad; lejos → avanzar normalmente. El robot adapta su movimiento según la distancia.</div>
+ <div class="figure">
+    <img src="img/robotica.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.4. Medicina y sistemas de diagnóstico</h3><p>Puede desarrollar sistemas de apoyo a la toma de decisiones cuando los síntomas o mediciones no presentan límites completamente definidos.</p><ul><li>Evaluación de factores de riesgo.</li><li>Monitoreo de pacientes.</li><li>Clasificación de síntomas.</li><li>Sistemas de apoyo al diagnóstico.</li><li>Evaluación de condiciones clínicas.</li></ul>
+ <div class="callout"><strong>Caso: evaluación de riesgo.</strong> Entradas: temperatura corporal, frecuencia cardíaca y presión arterial. Regla: temperatura alta Y frecuencia cardíaca elevada → alerta alta; temperatura normal Y frecuencia cardíaca normal → alerta baja. Puede ayudar a priorizar una revisión clínica, pero no sustituye el diagnóstico profesional.</div>
+ <div class="figure">
+    <img src="img/medicina.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.5. Agricultura inteligente</h3><p>Utiliza sensores y automatización para optimizar el consumo de agua y mejorar condiciones de cultivo.</p><ul><li>Control automático de riego.</li><li>Monitoreo de humedad del suelo.</li><li>Evaluación de condiciones climáticas.</li><li>Control de temperatura en invernaderos.</li><li>Supervisión del crecimiento de cultivos.</li></ul>
+ <div class="callout"><strong>Caso: riego inteligente.</strong> Entradas: humedad del suelo y temperatura ambiental. Salida: cantidad de agua. Reglas: humedad baja Y temperatura alta → riego abundante; humedad media Y temperatura normal → moderado; humedad alta → mínimo o suspendido. Ayuda a utilizar el agua eficientemente.</div>
+ <div class="figure">
+    <img src="img/agricultura.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.6. Industria automotriz</h3><p>Puede utilizarse en sistemas electrónicos de control y asistencia.</p><ul><li>Sistemas de frenado y estabilidad.</li><li>Control de transmisión.</li><li>Suspensión electrónica.</li><li>Asistencia a la conducción.</li><li>Control de climatización.</li></ul>
+ <div class="callout"><strong>Caso: control de velocidad.</strong> Entradas: velocidad actual, distancia al vehículo delantero y diferencia de velocidad. Reglas: distancia corta → reducir velocidad; distancia media → mantener precaución; distancia grande Y velocidad baja → aumentar progresivamente. Su implementación real requiere sensores, mecanismos de seguridad y validación rigurosa.</div>
+ <div class="figure">
+    <img src="img/auto.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.7. Finanzas y evaluación de riesgos</h3><p>Permite analizar variables económicas que pueden presentar incertidumbre.</p><ul><li>Evaluación de riesgos crediticios.</li><li>Clasificación de perfiles financieros.</li><li>Análisis de inversiones.</li><li>Evaluación de capacidad de pago.</li><li>Sistemas de apoyo a decisiones económicas.</li></ul>
+ <div class="callout"><strong>Caso: riesgo crediticio.</strong> Entradas: ingresos mensuales, endeudamiento e historial de pagos. Reglas: ingresos altos Y endeudamiento bajo → riesgo bajo; ingresos medios Y endeudamiento medio → riesgo moderado; ingresos bajos Y endeudamiento alto → riesgo elevado. No debe ser el único criterio para autorizar o rechazar un crédito.</div>
+  <div class="figure">
+    <img src="img/finanzas.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.8. Seguridad informática</h3><p>Puede analizar indicadores de comportamiento y detectar posibles amenazas.</p><ul><li>Detección de actividades sospechosas.</li><li>Clasificación de tráfico de red.</li><li>Evaluación de vulnerabilidades.</li><li>Identificación de patrones anormales.</li><li>Priorización de incidentes de seguridad.</li></ul>
+ <div class="callout"><strong>Caso: actividad sospechosa.</strong> Entradas: cantidad de conexiones, intentos fallidos de inicio de sesión y volumen de tráfico. Reglas: muchos intentos fallidos Y numerosas conexiones → alerta alta; pocos intentos fallidos Y tráfico normal → alerta baja; tráfico elevado → investigar.</div>
+ <div class="figure">
+    <img src="img/seguridadinformatica.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+ </div>
+ <h3>2.5.9. Comparación de aplicaciones</h3>
+ <table><tr><th>Área</th><th>Problema que resuelve</th><th>Resultado</th></tr><tr><td>Electrodomésticos</td><td>Ajustar funcionamiento.</td><td>Optimización.</td></tr><tr><td>Industria</td><td>Controlar procesos.</td><td>Mayor estabilidad.</td></tr><tr><td>Robótica</td><td>Navegar y evitar obstáculos.</td><td>Movimiento adaptable.</td></tr><tr><td>Medicina</td><td>Analizar indicadores.</td><td>Apoyo a decisiones.</td></tr><tr><td>Agricultura</td><td>Controlar riego.</td><td>Ahorro de agua.</td></tr><tr><td>Automoción</td><td>Regular sistemas del vehículo.</td><td>Mayor control.</td></tr><tr><td>Finanzas</td><td>Evaluar riesgos.</td><td>Clasificación.</td></tr><tr><td>Ciberseguridad</td><td>Analizar actividad sospechosa.</td><td>Priorización de alertas.</td></tr></table>
+ <h3>2.5.10. Ventajas y limitaciones</h3>
+ <div class="grid"><div class="card green"><h4>Ventajas</h4><ol><li>Trabaja con información imprecisa.</li><li>Representa conceptos del lenguaje humano.</li><li>Facilita sistemas de control.</li><li>Combina diferentes variables.</li><li>No requiere necesariamente modelos matemáticos exactos del sistema físico.</li><li>Sus reglas pueden ser comprensibles y explicables.</li></ol></div><div class="card orange"><h4>Limitaciones</h4><ol><li>Definir funciones puede requerir experiencia.</li><li>La selección de reglas influye en los resultados.</li><li>Un sistema mal diseñado puede decidir incorrectamente.</li><li>Con muchas variables, las reglas pueden crecer considerablemente.</li><li>No aprende automáticamente por sí sola: necesita reglas y parámetros, o integrarse con técnicas de aprendizaje.</li><li>No elimina la incertidumbre ni garantiza decisiones correctas.</li></ol></div></div>
+</section>
+
+<section id="resumen">
+ <h2>Resumen general de la Unidad 2</h2>
+ <table><tr><th>Tema</th><th>Conocimientos fundamentales</th></tr><tr><td>2.1. Conceptos básicos</td><td>Lógica difusa, lógica clásica, grados de verdad, variables lingüísticas.</td></tr><tr><td>2.2. Conjuntos difusos</td><td>Conjuntos, funciones de pertenencia, triangular, trapezoidal, gaussiana y sigmoidal.</td></tr><tr><td>2.3. Operaciones</td><td>Intersección AND, unión OR y complemento NOT.</td></tr><tr><td>2.4. Inferencia difusa</td><td>Fuzzificación, reglas, agregación, defuzzificación, Mamdani y Sugeno.</td></tr><tr><td>2.5. Aplicaciones</td><td>Industria, robótica, medicina, agricultura, automoción, finanzas y seguridad informática.</td></tr></table>
+ <h3>Glosario de conceptos importantes</h3>
+ <table><tr><th>Concepto</th><th>Definición</th></tr><tr><td>Lógica difusa</td><td>Modelo matemático que trabaja con grados de pertenencia.</td></tr><tr><td>Conjunto difuso</td><td>Conjunto cuyos elementos tienen diferentes grados de pertenencia.</td></tr><tr><td>Pertenencia</td><td>Grado en que un elemento forma parte de un conjunto.</td></tr><tr><td>Fuzzificación</td><td>Conversión de datos numéricos en valores difusos.</td></tr><tr><td>Inferencia</td><td>Proceso de evaluación de reglas difusas.</td></tr><tr><td>Agregación</td><td>Combinación de los resultados de las reglas.</td></tr><tr><td>Defuzzificación</td><td>Conversión de una salida difusa en un valor numérico.</td></tr><tr><td>Mamdani</td><td>Sistema de inferencia con salidas difusas.</td></tr><tr><td>Sugeno</td><td>Sistema de inferencia con salidas numéricas o funciones matemáticas.</td></tr></table>
+</section>
+<section id="bibliografia">
+ <h2>Bibliografía recomendada</h2>
+ <ol>
+  <li>Zadeh, L. A. (1965). Fuzzy sets. <em>Information and Control, 8</em>(3), 338–353. <a href="https://doi.org/10.1016/S0019-9958(65)90241-X" target="_blank" rel="noopener">https://doi.org/10.1016/S0019-9958(65)90241-X</a></li>
+  <li>Mamdani, E. H., &amp; Assilian, S. (1975). An experiment in linguistic synthesis with a fuzzy logic controller. <em>International Journal of Man-Machine Studies, 7</em>(1), 1–13. <a href="https://doi.org/10.1016/S0020-7373(75)80002-2" target="_blank" rel="noopener">https://doi.org/10.1016/S0020-7373(75)80002-2</a></li>
+  <li>Sugeno, M. (1985). <em>Industrial applications of fuzzy control</em>. Elsevier.</li>
+  <li>Ross, T. J. (2010). <em>Fuzzy logic with engineering applications</em> (3rd ed.). Wiley.</li>
+  <li>MathWorks. (s. f.). <em>Fuzzy Logic Toolbox</em>. <a href="https://www.mathworks.com/products/fuzzy-logic.html" target="_blank" rel="noopener">Documentación de Fuzzy Logic Toolbox</a>.</li>
+ </ol>
+</section>
+<section class="quiz" id="autoevaluacion">
+ <h2>Autoevaluación rápida</h2>
+ <p>Comprueba lo aprendido con estas preguntas. Selecciona una respuesta y presiona “Calificar”.</p>
+ <form id="quizForm">
+  <p><strong>1. ¿Qué valores puede tomar un grado de pertenencia?</strong></p>
+  <label><input type="radio" name="q1" value="a"> Solamente 0 y 1</label><label><input type="radio" name="q1" value="b"> Cualquier valor entre 0 y 1</label><label><input type="radio" name="q1" value="c"> Cualquier número negativo</label>
+  <p><strong>2. ¿Qué operación representa AND?</strong></p>
+  <label><input type="radio" name="q2" value="a"> Complemento</label><label><input type="radio" name="q2" value="b"> Unión</label><label><input type="radio" name="q2" value="c"> Intersección</label>
+  <p><strong>3. ¿Qué etapa convierte datos numéricos en grados de pertenencia?</strong></p>
+  <label><input type="radio" name="q3" value="a"> Fuzzificación</label><label><input type="radio" name="q3" value="b"> Agregación</label><label><input type="radio" name="q3" value="c"> Defuzzificación</label>
+  <p><strong>4. ¿Qué sistema utiliza salidas que son conjuntos difusos?</strong></p>
+  <label><input type="radio" name="q4" value="a"> Sugeno</label><label><input type="radio" name="q4" value="b"> Mamdani</label><label><input type="radio" name="q4" value="c"> Booleano</label>
+  <p><strong>5. ¿Cuál es una aplicación de la lógica difusa?</strong></p>
+  <label><input type="radio" name="q5" value="a"> Únicamente almacenar archivos</label><label><input type="radio" name="q5" value="b"> Reemplazar todos los sensores</label><label><input type="radio" name="q5" value="c"> Control inteligente de temperatura</label>
+  <button type="button" class="action" onclick="calificar()">Calificar respuestas</button>
+  <button type="reset" class="action" style="background:#66788b">Reiniciar</button>
+  <div class="result" id="resultadoQuiz" aria-live="polite"></div>
+ </form>
+</section>
+</main>
+</div>
+<footer><strong>Cómputo Suave · Unidad 2. Lógica Difusa</strong><br>Universidad Tecnológica de Ciudad Juárez<br><span>“La lógica difusa no busca la exactitud absoluta, sino representar mejor los problemas del mundo real.”</span></footer>
+<button class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver al inicio">↑</button>
+<script>
+function copiarCodigo(){
+ const texto=document.querySelector('#codigo code').innerText;
+ navigator.clipboard.writeText(texto).then(()=>alert('Código copiado al portapapeles.')).catch(()=>alert('No fue posible copiar automáticamente. Selecciona el código y cópialo.'));
+}
+function calificar(){
+ const respuestas={q1:'b',q2:'c',q3:'a',q4:'b',q5:'c'};
+ let aciertos=0,contestadas=0;
+ for(const [pregunta,correcta] of Object.entries(respuestas)){
+  const seleccion=document.querySelector('input[name="'+pregunta+'"]:checked');
+  if(seleccion){contestadas++;if(seleccion.value===correcta)aciertos++;}
+ }
+ const salida=document.getElementById('resultadoQuiz');
+ if(contestadas<5){salida.textContent='Responde las cinco preguntas. Llevas '+contestadas+' de 5 contestadas.';return;}
+ salida.textContent='Resultado: '+aciertos+' de 5 respuestas correctas ('+(aciertos*20)+'%).';
+}
+const enlaces=[...document.querySelectorAll('#menu a')];
+const secciones=enlaces.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+window.addEventListener('scroll',()=>{
+ let actual='';
+ secciones.forEach(s=>{if(window.scrollY>=s.offsetTop-130)actual=s.id;});
+ enlaces.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+actual));
+});
+document.querySelectorAll('#menu a').forEach(a=>a.addEventListener('click',()=>{enlaces.forEach(x=>x.classList.remove('active'));a.classList.add('active');}));
+</script>
+</body>
+</html>
