@@ -1,0 +1,1905 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <title>Cómputo Suave | Unidad 3. Redes Neuronales</title>
+    <style>
+      :root {
+        --navy: #123b68;
+        --blue: #1676b8;
+        --teal: #087f8c;
+        --green: #16845b;
+        --ink: #203047;
+        --muted: #5c6b7c;
+        --bg: #f2f6fa;
+        --line: #d9e4ef;
+      }
+      * {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          16px/1.68 Arial,
+          Helvetica,
+          sans-serif;
+      }
+      header {
+        background: linear-gradient(115deg, #0b315d, #087f8c);
+        color: white;
+        padding: 42px 24px;
+      }
+      header > div {
+        max-width: 1180px;
+        margin: auto;
+      }
+      header small {
+        color: #b9f1e5;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1.12;
+        margin: 8px 0;
+      }
+      header p {
+        max-width: 800px;
+      }
+      .layout {
+        max-width: 1400px;
+        margin: 24px auto;
+        padding: 0 18px;
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        gap: 22px;
+      }
+      nav {
+        position: sticky;
+        top: 12px;
+        align-self: start;
+        max-height: calc(100vh - 24px);
+        overflow: auto;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+      }
+      nav b {
+        color: var(--navy);
+      }
+      nav a {
+        display: block;
+        text-decoration: none;
+        color: #3b536b;
+        padding: 7px 9px;
+        border-radius: 7px;
+        font-size: 0.9rem;
+      }
+      nav a.sub {
+        padding-left: 22px;
+        font-size: 0.84rem;
+      }
+      nav a:hover,
+      nav a.active {
+        background: #e8f4fa;
+        color: var(--navy);
+        font-weight: bold;
+      }
+      main {
+        min-width: 0;
+      }
+      section {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: clamp(18px, 3vw, 30px);
+        margin-bottom: 20px;
+        box-shadow: 0 7px 22px #123b6810;
+        scroll-margin-top: 16px;
+      }
+      h2 {
+        color: var(--navy);
+        font-size: 1.65rem;
+        margin: 0 0 14px;
+      }
+      h3 {
+        color: var(--teal);
+        margin: 25px 0 8px;
+        font-size: 1.25rem;
+      }
+      h4 {
+        color: var(--navy);
+        margin: 18px 0 6px;
+      }
+      p {
+        margin: 8px 0 13px;
+      }
+      .lead {
+        font-size: 1.08rem;
+      }
+      .callout,
+      .note {
+        padding: 14px 17px;
+        border-radius: 9px;
+        margin: 15px 0;
+      }
+      .callout {
+        background: #edf8f7;
+        border-left: 5px solid var(--teal);
+      }
+      .note {
+        background: #fff7e8;
+        border-left: 5px solid #d99b32;
+      }
+      .grid2,
+      .grid3 {
+        display: grid;
+        gap: 14px;
+      }
+      .grid2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .card {
+        background: #f7fafc;
+        border: 1px solid var(--line);
+        padding: 14px;
+        border-radius: 11px;
+      }
+      .card h4 {
+        margin-top: 0;
+      }
+      figure {
+        margin: 16px 0;
+        padding: 12px;
+        background: #f8fbfe;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+      }
+      figure img,
+      figure svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      figure svg {
+        max-height: 330px;
+      }
+      figcaption {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-top: 7px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 13px 0;
+        font-size: 0.93rem;
+      }
+      th,
+      td {
+        border: 1px solid var(--line);
+        padding: 9px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #eaf3fa;
+        color: var(--navy);
+      }
+      tr:nth-child(even) td {
+        background: #fbfdff;
+      }
+      .formula {
+        font:
+          1.1rem Georgia,
+          serif;
+        text-align: center;
+        background: #f0f5fb;
+        border: 1px solid #d7e5f3;
+        border-radius: 9px;
+        padding: 12px;
+        margin: 12px 0;
+        overflow-x: auto;
+      }
+      .steps {
+        list-style: none;
+        padding: 0;
+        counter-reset: n;
+      }
+      .steps li {
+        counter-increment: n;
+        position: relative;
+        padding: 7px 8px 7px 44px;
+        margin: 7px 0;
+      }
+      .steps li:before {
+        content: counter(n);
+        position: absolute;
+        left: 0;
+        top: 4px;
+        background: var(--blue);
+        color: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        font-weight: bold;
+      }
+      pre {
+        background: #122337;
+        color: #eaf4ff;
+        padding: 17px;
+        border-radius: 10px;
+        overflow: auto;
+        line-height: 1.5;
+        font-size: 0.86rem;
+      }
+      code {
+        font-family: Consolas, monospace;
+      }
+      .codehead {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .btn {
+        background: var(--teal);
+        color: white;
+        border: 0;
+        padding: 9px 13px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .btn:hover {
+        background: #06636d;
+      }
+      .badge {
+        display: inline-block;
+        background: #e4f5ef;
+        color: #126747;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 0.82rem;
+        font-weight: bold;
+      }
+      .quizq {
+        border: 1px solid var(--line);
+        padding: 13px;
+        border-radius: 9px;
+        margin: 12px 0;
+      }
+      .quizq label {
+        display: block;
+        margin: 6px 0;
+      }
+      #result {
+        font-weight: bold;
+      }
+      footer {
+        background: #0c315b;
+        color: #e8f4ff;
+        text-align: center;
+        padding: 25px;
+      }
+      .top {
+        position: fixed;
+        right: 17px;
+        bottom: 17px;
+        border: 0;
+        border-radius: 50%;
+        background: var(--navy);
+        color: white;
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        nav {
+          position: relative;
+          top: 0;
+          max-height: none;
+        }
+      }
+      @media (max-width: 620px) {
+        .grid2,
+        .grid3 {
+          grid-template-columns: 1fr;
+        }
+        section {
+          padding: 17px;
+        }
+        table {
+          font-size: 0.85rem;
+        }
+        th,
+        td {
+          padding: 7px;
+        }
+      }
+      @media print {
+        nav,
+        .top,
+        .btn,
+        #autoevaluacion {
+          display: none !important;
+        }
+        .layout {
+          display: block;
+        }
+        section {
+          box-shadow: none;
+          break-inside: avoid;
+        }
+        body {
+          background: white;
+        }
+      }
+      .pill {
+        display: inline-block;
+        border-radius: 30px;
+        background: #e6f4f2;
+        color: #08756e;
+        padding: 3px 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+      .figure{border:1px solid var(--line);border-radius:14px;padding:14px;margin:16px 0;background:#fcfdff}
+.figure svg{width:100%;height:auto;display:block;max-height:300px}
+      .imagen-tema {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    object-fit: contain;
+}
+    </style>
+  </head>
+  <body>
+    <header id="inicio">
+      <div>
+        <small>Material de estudio.</small>
+        <h1>Cómputo Suave <br />Unidad 3. Redes Neuronales</h1>
+        <p>
+          Fundamentos, perceptrón, aprendizaje supervisado, redes multicapa y
+          algoritmos de entrenamiento mediante backpropagation.
+        </p>
+        <span class="pill">Material didáctico interactivo</span>
+      </div>
+    </header>
+    <div class="layout">
+      <nav aria-label="Menú de contenidos">
+        <b>Contenido de la unidad</b> <a href="#intro">Introducción</a
+        ><a href="#objetivo">Objetivo</a> <a href="#u31">3.1. Fundamentos</a
+        ><a class="sub" href="#quees">¿Qué es una RNA?</a
+        ><a class="sub" href="#bio">Inspiración biológica</a
+        ><a class="sub" href="#capas">Estructura por capas</a
+        ><a class="sub" href="#neurona">Neurona artificial</a
+        ><a class="sub" href="#activacion">Funciones de activación</a
+        ><a class="sub" href="#aprende">Proceso de aprendizaje</a>
+        <a href="#u32">3.2. Perceptrón y aprendizaje supervisado</a
+        ><a class="sub" href="#perceptron">Perceptrón</a
+        ><a class="sub" href="#supervisado">Aprendizaje supervisado</a
+        ><a class="sub" href="#regla">Regla de aprendizaje</a
+        ><a class="sub" href="#xorlimite">Limitaciones y XOR</a>
+        <a href="#u33">3.3. Redes multicapa y backpropagation</a
+        ><a class="sub" href="#multicapa">Red multicapa</a
+        ><a class="sub" href="#backprop">Backpropagation</a
+        ><a class="sub" href="#ejxor">Ejemplo Python: XOR</a
+        ><a class="sub" href="#evaluacion">Evaluar aprendizaje</a>
+        <a href="#aplicaciones">3.4. Aplicaciones</a
+        ><a href="#resumen">Resumen y bibliografía</a
+        ><a href="#autoevaluacion">Autoevaluación</a>
+      </nav>
+      <main>
+        <section id="intro">
+          <h2>Introducción a la unidad</h2>
+          <p class="lead">
+            Las <strong>redes neuronales artificiales (RNA)</strong> son modelos
+            computacionales inspirados, de manera simplificada, en el
+            funcionamiento de las neuronas del cerebro humano. Aprenden patrones
+            a partir de datos para clasificar información, reconocer imágenes,
+            hacer predicciones y resolver problemas complejos.
+          </p>
+          <p>
+            En el cómputo suave son importantes porque permiten trabajar con
+            información incompleta, imprecisa o difícil de describir mediante
+            reglas tradicionales.
+          </p>
+          <h3>Ejemplos de aplicaciones cotidianas</h3>
+          <div class="grid3">
+            <div class="card">
+              <h4>📱 Reconocimiento facial</h4>
+              <p>Desbloqueo de teléfonos.</p>
+            </div>
+            <div class="card">
+              <h4>✉️ Detección de spam</h4>
+              <p>Clasificación de correos no deseados.</p>
+            </div>
+            <div class="card">
+              <h4>🏠 Predicción</h4>
+              <p>Estimación de precios de viviendas.</p>
+            </div>
+            <div class="card">
+              <h4>🎙️ Voz</h4>
+              <p>Reconocimiento de instrucciones habladas.</p>
+            </div>
+            <div class="card">
+              <h4>🩻 Medicina</h4>
+              <p>Análisis de imágenes médicas.</p>
+            </div>
+            <div class="card">
+              <h4>🎬 Recomendaciones</h4>
+              <p>Sugerencias de películas, música y productos.</p>
+            </div>
+          </div>
+        </section>
+        <section id="objetivo">
+          <h2>Objetivo de aprendizaje</h2>
+          <div class="callout">
+            <strong
+              >Al finalizar la unidad, el estudiante comprenderá los fundamentos
+              de las redes neuronales, reconocerá el funcionamiento del
+              perceptrón y el aprendizaje supervisado, y explicará cómo se
+              entrenan redes multicapa mediante el algoritmo
+              backpropagation.</strong
+            >
+          </div>
+        </section>
+
+        <section id="u31">
+          <h2>3.1. Fundamentos de las redes neuronales</h2>
+          <h3 id="quees">3.1.1. ¿Qué es una red neuronal artificial?</h3>
+          <p>
+            Una red neuronal artificial es un modelo matemático y computacional
+            compuesto por unidades llamadas
+            <strong>neuronas artificiales</strong>, conectadas entre sí. Cada
+            neurona recibe datos, realiza operaciones matemáticas y genera una
+            salida que puede ser utilizada por otras neuronas.
+          </p>
+          <p>
+            Una red aprende modificando los valores de sus conexiones, conocidos
+            como <strong>pesos</strong>, para reducir la diferencia entre sus
+            resultados y las respuestas esperadas.
+          </p>
+          <div class="callout">
+            <strong>Ejemplo: filtro de correo.</strong> Se entrena con correos
+            previamente clasificados como spam o no spam. Puede analizar
+            cantidad de enlaces, palabras sospechosas, uso excesivo de
+            mayúsculas, remitente desconocido y frecuencia de determinadas
+            palabras. Después podrá clasificar correos nuevos.
+          </div>
+          <h3 id="bio">3.1.2. Inspiración biológica: la neurona humana</h3>
+          <p>
+            El funcionamiento de las RNA se inspira en algunos elementos de las
+            neuronas biológicas.
+          </p>
+          <figure>
+            <svg
+              viewBox="0 0 780 260"
+              role="img"
+              aria-label="Ilustración esquemática de neurona biológica"
+            >
+              <g
+                stroke="#1684a0"
+                stroke-width="5"
+                fill="none"
+                stroke-linecap="round"
+              >
+                <path
+                  d="M235 130 C170 110 130 55 75 48 M235 130 C170 140 135 200 65 218 M235 130 C160 130 110 130 35 130 M280 130 C370 130 400 130 500 130 C590 130 620 110 700 110"
+                />
+                <path
+                  d="M75 48l-28 -25m28 25l-8 -32m-30 114l-28 -20m28 20l-26 18m24 70l-25 25m25 -25l-2 30"
+                />
+              </g>
+              <ellipse
+                cx="260"
+                cy="130"
+                rx="58"
+                ry="48"
+                fill="#ffe5a8"
+                stroke="#d58c27"
+                stroke-width="4"
+              />
+              <circle cx="260" cy="130" r="17" fill="#d58c27" />
+              <g fill="#203047" font-size="17">
+                <text x="40" y="20">Dendritas</text>
+                <text x="225" y="205">Soma</text>
+                <text x="490" y="95">Axón</text>
+                <text x="620" y="75">Terminales</text>
+              </g>
+            </svg>
+            <figcaption>
+              Esquema educativo de las partes principales de una neurona
+              biológica.
+            </figcaption>
+          </figure>
+          <table>
+            <tr>
+              <th>Elemento biológico</th>
+              <th>Función</th>
+            </tr>
+            <tr>
+              <td>Dendritas</td>
+              <td>Reciben señales de otras neuronas.</td>
+            </tr>
+            <tr>
+              <td>Cuerpo celular o soma</td>
+              <td>Integra la información recibida.</td>
+            </tr>
+            <tr>
+              <td>Núcleo</td>
+              <td>
+                Contiene información genética y regula la actividad celular.
+              </td>
+            </tr>
+            <tr>
+              <td>Axón</td>
+              <td>Transmite impulsos nerviosos.</td>
+            </tr>
+            <tr>
+              <td>Terminales sinápticas</td>
+              <td>Permiten la comunicación con otras células.</td>
+            </tr>
+            <tr>
+              <td>Sinapsis</td>
+              <td>Zona de comunicación entre neuronas.</td>
+            </tr>
+          </table>
+          <h4>Relación con una neurona artificial</h4>
+          <table>
+            <tr>
+              <th>Neurona biológica</th>
+              <th>Neurona artificial</th>
+            </tr>
+            <tr>
+              <td>Dendritas</td>
+              <td>Entradas de datos.</td>
+            </tr>
+            <tr>
+              <td>Señales nerviosas</td>
+              <td>Valores numéricos de entrada.</td>
+            </tr>
+            <tr>
+              <td>Sinapsis</td>
+              <td>Conexiones entre neuronas.</td>
+            </tr>
+            <tr>
+              <td>Fuerza de conexión</td>
+              <td>Peso.</td>
+            </tr>
+            <tr>
+              <td>Integración de señales</td>
+              <td>Suma ponderada.</td>
+            </tr>
+            <tr>
+              <td>Activación neuronal</td>
+              <td>Función de activación.</td>
+            </tr>
+            <tr>
+              <td>Señal de salida</td>
+              <td>Resultado de la neurona.</td>
+            </tr>
+          </table>
+          <div class="note">
+            Esta comparación es una analogía: una neurona artificial no
+            reproduce todos los procesos biológicos del cerebro.
+          </div>
+          <h3 id="capas">3.1.3. Estructura de una red neuronal artificial</h3>
+          <figure>
+            <svg
+              viewBox="0 0 800 300"
+              role="img"
+              aria-label="Capa de entrada, capa oculta y capa de salida"
+            >
+              <g stroke="#9aafc2" stroke-width="2">
+                <path
+                  d="M100 70L370 55 M100 70L370 150 M100 70L370 245 M100 150L370 55 M100 150L370 150 M100 150L370 245 M100 230L370 55 M100 230L370 150 M100 230L370 245 M400 55L670 140 M400 150L670 140 M400 245L670 140"
+                />
+              </g>
+              <g fill="#d9efff" stroke="#1676b8" stroke-width="3">
+                <circle cx="100" cy="70" r="23" />
+                <circle cx="100" cy="150" r="23" />
+                <circle cx="100" cy="230" r="23" />
+              </g>
+              <g fill="#ffedcf" stroke="#d98920" stroke-width="3">
+                <circle cx="390" cy="55" r="23" />
+                <circle cx="390" cy="150" r="23" />
+                <circle cx="390" cy="245" r="23" />
+              </g>
+              <circle
+                cx="690"
+                cy="140"
+                r="25"
+                fill="#d9f5e7"
+                stroke="#16845b"
+                stroke-width="3"
+              />
+              <g fill="#203047" text-anchor="middle" font-size="18">
+                <text x="100" y="285">Entrada</text>
+                <text x="390" y="285">Capa oculta</text>
+                <text x="690" y="185">Salida</text>
+              </g>
+            </svg>
+            <figcaption>
+              Diagrama conceptual: las neuronas se organizan en capas y se
+              conectan mediante pesos.
+            </figcaption>
+          </figure>
+          <div class="grid3">
+            <div class="card">
+              <h4>1. Capa de entrada</h4>
+              <p>
+                Recibe los datos. Para estimar una vivienda: superficie,
+                habitaciones, antigüedad y ubicación.
+              </p>
+            </div>
+            <div class="card">
+              <h4>2. Capas ocultas</h4>
+              <p>
+                Procesan la información e identifican relaciones y patrones.
+                Puede haber una o varias capas.
+              </p>
+            </div>
+            <div class="card">
+              <h4>3. Capa de salida</h4>
+              <p>
+                Entrega el resultado: precio estimado, clasificación de spam o
+                identificación de una imagen.
+              </p>
+            </div>
+          </div>
+          <h3 id="neurona">3.1.4. Componentes de una neurona artificial</h3>
+          <p>
+            Una neurona recibe valores de entrada, multiplica cada entrada por
+            su peso, suma los resultados y agrega un sesgo; finalmente aplica
+            una función de activación.
+          </p>
+          <div class="formula">z = Σ (x<sub>i</sub> · w<sub>i</sub>) + b</div>
+          <p>
+            <strong>Donde:</strong> x<sub>i</sub> = valor de entrada; w<sub
+              >i</sub
+            >
+            = peso asociado; b = sesgo (bias); n = número de entradas; z = suma
+            ponderada antes de la activación.
+          </p>
+          <div class="formula">y = f(z)</div>
+          <p>f representa la función de activación.</p>
+          <h4>Ejemplo práctico: calificación ponderada</h4>
+          <p>
+            Entradas: tareas x₁ = 8 y examen x₂ = 9. Pesos: w₁ = 0.4 y w₂ = 0.6.
+            Sesgo b = 0.
+          </p>
+          <div class="formula">
+            z = (8)(0.4) + (9)(0.6) + 0 = 3.2 + 5.4 = 8.6
+          </div>
+          <p>
+            Si se utiliza una función de activación lineal, la salida es 8.6; en
+            este ejemplo representa una calificación ponderada.
+          </p>
+          <h4>Pesos y sesgo</h4>
+          <ul>
+            <li>
+              <strong>Pesos (weights):</strong> determinan la importancia de
+              cada entrada. Por ejemplo, el examen podría tener un peso mayor
+              que la asistencia.
+            </li>
+            <li>
+              <strong>Sesgo (bias):</strong> valor adicional que desplaza el
+              resultado de la suma ponderada y permite ajustar mejor la neurona.
+            </li>
+          </ul>
+          <p>
+            Los pesos y sesgos son parámetros que el algoritmo modifica durante
+            el entrenamiento.
+          </p>
+          <h3 id="activacion">3.1.5. Funciones de activación</h3>
+          <p>
+            Una función de activación transforman la suma ponderada y determinan qué valor transmite la
+            neurona a la siguiente capa.
+          </p>
+          <div class="figure">
+    <img src="img/funcionesactivacion.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+    <figcaption>Representación esquemática de tres funciones de activación.</figcaption>
+ </div>
+          
+          <table>
+            <tr>
+              <th>Función</th>
+              <th>Características</th>
+              <th>Uso común</th>
+            </tr>
+            <tr>
+              <td>Lineal</td>
+              <td>La salida debe ser igual a la señal de entrada. No transforma la entrada, sino que la transmite sin cambios</td>
+              <td>Problemas de regresión en los que queremos prever un valor numérico.</td>
+            </tr>
+            <tr>
+              <td>Escalón</td>
+              <td>Devuelve 0 o 1 según un umbral.</td>
+              <td>Perceptrón clásico.</td>
+            </tr>
+            <tr>
+              <td>Sigmoide</td>
+              <td>Produce valores entre 0 y 1.</td>
+              <td>Clasificación binaria y probabilidades de salida.</td>
+            </tr>
+            <tr>
+              <td>Tangente hiperbólica (tanh)</td>
+              <td>Produce valores entre −1 y 1.</td>
+              <td>Algunas redes con salidas centradas en cero.</td>
+            </tr>
+            <tr>
+              <td>ReLU</td>
+              <td>
+                Devuelve cero para valores negativos y conserva los positivos.
+              </td>
+              <td>Capas ocultas de muchas redes profundas.</td>
+            </tr>
+            <tr>
+              <td>Softmax</td>
+              <td>Convierte varios valores en probabilidades que suman 1.</td>
+              <td>Clasificación multiclase.</td>
+            </tr>
+          </table>
+          <h4>Función escalón</h4>
+          <div class="formula">
+            f(z) = 1 si z ≥ 0; de lo contrario, f(z) = 0
+          </div>
+          <h4>Función sigmoide</h4>
+          <div class="formula">f(z) = 1 / (1 + e<sup>−z</sup>)</div>
+          <h4>Función ReLU</h4>
+          <div class="formula">f(z) = max(0, z)</div>
+          <p>
+            <strong>Ejemplo:</strong> si z = −3, ReLU devuelve 0. Si z = 5,
+            devuelve 5.
+          </p>
+          <h3 id="aprende">3.1.6. ¿Cómo aprende una red neuronal?</h3>
+          <ol class="steps">
+            <li>
+              <strong>Preparación de datos:</strong> recopilar y organizar
+              ejemplos.
+            </li>
+            <li>
+              <strong>Inicialización:</strong> asignar valores iniciales a pesos
+              y sesgos.
+            </li>
+            <li>
+              <strong>Propagación hacia adelante:</strong> ingresar datos y
+              calcular predicciones.
+            </li>
+            <li>
+              <strong>Cálculo del error:</strong> comparar predicciones con
+              respuestas correctas.
+            </li>
+            <li>
+              <strong>Actualización de parámetros:</strong> modificar pesos y
+              sesgos para reducir el error.
+            </li>
+            <li>
+              <strong>Repetición:</strong> continuar durante varias iteraciones
+              o épocas.
+            </li>
+            <li>
+              <strong>Evaluación:</strong> comprobar respuestas ante datos que
+              no se usaron para entrenar.
+            </li>
+          </ol>
+          <div class="grid2">
+            <div class="card">
+              <h4>Entrenamiento</h4>
+              <p>Proceso mediante el cual la red aprende.</p>
+            </div>
+            <div class="card">
+              <h4>Época</h4>
+              <p>
+                Una pasada completa por todos los ejemplos del conjunto de
+                entrenamiento.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Error o pérdida (loss)</h4>
+              <p>
+                Medida de qué tan diferentes son predicciones y valores
+                esperados.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Generalización</h4>
+              <p>Capacidad de responder correctamente ante datos nuevos.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="u32">
+          <h2>3.2. Perceptrón y aprendizaje supervisado</h2>
+          <h3 id="perceptron">3.2.1. ¿Qué es un perceptrón?</h3>
+          <p>
+            El perceptrón es uno de los modelos más sencillos de una red
+            neuronal artificial. Fue propuesto por Frank Rosenblatt en 1957 y
+            permite resolver problemas de clasificación binaria cuando los datos
+            pueden separarse mediante una frontera lineal.
+          </p>
+          <p>
+            Recibe entradas, las multiplica por sus pesos, suma los resultados,
+            agrega un sesgo y aplica una función de activación.
+          </p>
+          <div class="formula">y = f(Σ x<sub>i</sub>w<sub>i</sub> + b)</div>
+          <p>
+            <strong>Donde:</strong> x<sub>i</sub> son las entradas; w<sub
+              >i</sub
+            >
+            los pesos; b el sesgo; f la función de activación; y la salida.
+          </p>
+          <figure>
+            <svg
+              viewBox="0 0 800 250"
+              role="img"
+              aria-label="Diagrama de perceptrón"
+            >
+              <g stroke="#7d91a5" stroke-width="2">
+                <path
+                  d="M100 50L350 125 M100 125L350 125 M100 200L350 125 M440 125L620 125"
+                />
+              </g>
+              <g fill="#d9efff" stroke="#1676b8" stroke-width="3">
+                <circle cx="100" cy="50" r="23" />
+                <circle cx="100" cy="125" r="23" />
+                <circle cx="100" cy="200" r="23" />
+              </g>
+              <circle
+                cx="380"
+                cy="125"
+                r="42"
+                fill="#e8f4fa"
+                stroke="#087f8c"
+                stroke-width="3"
+              />
+              <rect
+                x="620"
+                y="90"
+                width="145"
+                height="70"
+                rx="12"
+                fill="#e3f5e9"
+                stroke="#16845b"
+                stroke-width="3"
+              />
+              <g font-size="19" fill="#203047" text-anchor="middle">
+                <text x="100" y="57">x₁</text>
+                <text x="100" y="132">x₂</text>
+                <text x="100" y="207">x₃</text>
+                <text x="380" y="133">Σ + b</text>
+                <text x="692" y="132">f(z) → y</text>
+              </g>
+            </svg>
+            <figcaption>
+              Entradas, suma ponderada, sesgo, activación y salida de un
+              perceptrón.
+            </figcaption>
+          </figure>
+          <h3>3.2.2. Funcionamiento del perceptrón: ejemplo educativo</h3>
+          <p>
+            Una institución desea clasificar si un estudiante aprueba o no una
+            evaluación, considerando calificación de actividades y examen. Para
+            simplificar: 1 = cumple el criterio; 0 = no cumple.
+          </p>
+          <p>
+            Entradas: x₁ = actividades y x₂ = examen. Pesos: w₁ = 0.5 y w₂ =
+            0.5. Sesgo: b = −0.75.
+          </p>
+          <div class="formula">z = (x₁)(0.5) + (x₂)(0.5) − 0.75</div>
+          <p>
+            Función escalón: si z ≥ 0, la salida será 1; de lo contrario, será
+            0.
+          </p>
+          <table>
+            <tr>
+              <th>Actividades</th>
+              <th>Examen</th>
+              <th>Resultado z</th>
+              <th>Salida</th>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>−0.75</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>1</td>
+              <td>−0.25</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>0</td>
+              <td>−0.25</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>1</td>
+              <td>0.25</td>
+              <td>1</td>
+            </tr>
+          </table>
+          <p>
+            En este ejemplo, el estudiante únicamente aprueba cuando cumple
+            ambos criterios.
+          </p>
+          <h3 id="supervisado">3.2.3. ¿Qué es el aprendizaje supervisado?</h3>
+          <p>
+            Es una técnica de aprendizaje automático en la que la red recibe
+            ejemplos que incluyen <strong>entradas</strong> y
+            <strong>etiquetas o respuestas esperadas</strong>. La red realiza
+            predicciones y las compara con las respuestas esperadas para ajustar
+            sus parámetros.
+          </p>
+          <p><strong>Ejemplo: identificación de spam.</strong></p>
+          <table>
+            <tr>
+              <th>Correo</th>
+              <th>Enlaces sospechosos</th>
+              <th>Remitente desconocido</th>
+              <th>Etiqueta</th>
+            </tr>
+            <tr>
+              <td>Correo 1</td>
+              <td>1</td>
+              <td>1</td>
+              <td>Spam</td>
+            </tr>
+            <tr>
+              <td>Correo 2</td>
+              <td>0</td>
+              <td>0</td>
+              <td>No spam</td>
+            </tr>
+            <tr>
+              <td>Correo 3</td>
+              <td>1</td>
+              <td>0</td>
+              <td>Spam</td>
+            </tr>
+            <tr>
+              <td>Correo 4</td>
+              <td>0</td>
+              <td>1</td>
+              <td>No spam</td>
+            </tr>
+          </table>
+          <p>
+            La etiqueta es la respuesta correcta que el modelo debe aprender a
+            predecir.
+          </p>
+          <h3 id="regla">3.2.4. Entrenamiento del perceptrón</h3>
+          <p>
+            El perceptrón puede aprender mediante una regla de actualización de
+            pesos:
+          </p>
+          <div class="formula">
+            w<sub>i</sub><sup>nuevo</sup> = w<sub>i</sub><sup>anterior</sup> +
+            η(t − y)x<sub>i</sub>
+          </div>
+          <p>Para el sesgo:</p>
+          <div class="formula">
+            b<sup>nuevo</sup> = b<sup>anterior</sup> + η(t − y)
+          </div>
+          <p>
+            <strong>Donde:</strong> w = peso; η = tasa de aprendizaje; t =
+            salida esperada; y = salida obtenida; x = entrada.
+          </p>
+          <h4>Ejemplo de actualización</h4>
+          <p>
+            Entradas x₁ = 1 y x₂ = 1; salida esperada t = 1; salida obtenida y =
+            0; tasa η = 0.1; pesos actuales w₁ = 0.2 y w₂ = 0.3.
+          </p>
+          <div class="formula">e = t − y = 1 − 0 = 1</div>
+          <div class="formula">w₁ = 0.2 + 0.1(1)(1) = 0.3</div>
+          <div class="formula">w₂ = 0.3 + 0.1(1)(1) = 0.4</div>
+          <p>
+            Los pesos aumentan porque la salida obtenida fue menor que la
+            esperada. El proceso continúa con otros ejemplos hasta que el
+            perceptrón aprenda la clasificación, si el problema es linealmente
+            separable.
+          </p>
+          <h3 id="xorlimite">3.2.5. Limitaciones del perceptrón simple</h3>
+          <p>
+            El perceptrón simple solo puede aprender problemas
+            <strong>linealmente separables</strong>: clases que pueden separarse
+            mediante una línea recta en dos dimensiones, un plano en tres
+            dimensiones o un hiperplano en dimensiones superiores.
+          </p>
+          <h4>Compuerta lógica XOR</h4>
+          <table>
+            <tr>
+              <th>Entrada A</th>
+              <th>Entrada B</th>
+              <th>Salida XOR</th>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>1</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>0</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>1</td>
+              <td>0</td>
+            </tr>
+          </table>
+          <figure>
+            <svg
+              viewBox="0 0 600 290"
+              role="img"
+              aria-label="Distribución de puntos de XOR no separables por una recta"
+            >
+              <path
+                d="M70 245H535 M70 245V25"
+                stroke="#60778d"
+                stroke-width="2"
+                fill="none"
+              />
+              <g fill="#1676b8">
+                <circle cx="120" cy="205" r="11" />
+                <circle cx="475" cy="60" r="11" />
+              </g>
+              <g fill="#d98920">
+                <circle cx="120" cy="60" r="11" />
+                <circle cx="475" cy="205" r="11" />
+              </g>
+              <g fill="#203047" font-size="16">
+                <text x="80" y="275">0</text>
+                <text x="470" y="275">1</text>
+                <text x="40" y="65">1</text>
+                <text x="40" y="210">0</text>
+                <text x="250" y="290">Entrada A</text>
+                <text x="5" y="18">Entrada B</text>
+              </g>
+            </svg>
+            <figcaption>
+              La distribución XOR alterna las clases; no existe una única recta
+              que separe ambas.
+            </figcaption>
+          </figure>
+          <p>
+            El perceptrón simple no puede aprender correctamente XOR porque sus
+            clases no pueden separarse mediante una sola línea recta. Esta
+            limitación motivó el desarrollo de redes neuronales multicapa.
+          </p>
+        </section>
+
+        <section id="u33">
+          <h2>
+            3.3. Redes multicapa y algoritmos de entrenamiento (backpropagation)
+          </h2>
+          <h3 id="multicapa">3.3.1. ¿Qué es una red neuronal multicapa?</h3>
+          <p>
+            Una red neuronal multicapa contiene una capa de entrada, una o
+            varias capas ocultas y una capa de salida. A diferencia del
+            perceptrón simple, puede aprender relaciones más complejas y
+            resolver problemas no linealmente separables, como XOR.
+          </p>
+          <div class="figure">
+    <img src="img/redmulticapa.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+    <figcaption>Las capas ocultas transforman progresivamente la información.</figcaption>
+ </div>
+          <table>
+            <tr>
+              <th>Capa</th>
+              <th>Descripción</th>
+              <th>Ejemplo</th>
+            </tr>
+            <tr>
+              <td>Entrada</td>
+              <td>Recibe los datos iniciales.</td>
+              <td>Dos valores binarios: A y B.</td>
+            </tr>
+            <tr>
+              <td>Oculta 1</td>
+              <td>Identifica relaciones entre las entradas.</td>
+              <td>Procesa combinaciones de A y B.</td>
+            </tr>
+            <tr>
+              <td>Oculta 2</td>
+              <td>Combina características aprendidas.</td>
+              <td>Genera representaciones más complejas.</td>
+            </tr>
+            <tr>
+              <td>Salida</td>
+              <td>Produce la predicción final.</td>
+              <td>Resultado 0 o 1.</td>
+            </tr>
+          </table>
+          <h3>3.3.2. Diferencias entre perceptrón simple y red multicapa</h3>
+          <table>
+            <tr>
+              <th>Característica</th>
+              <th>Perceptrón simple</th>
+              <th>Red multicapa</th>
+            </tr>
+            <tr>
+              <td>Capas ocultas</td>
+              <td>No tiene.</td>
+              <td>Puede tener una o varias.</td>
+            </tr>
+            <tr>
+              <td>Complejidad</td>
+              <td>Baja.</td>
+              <td>Variable, puede ser alta.</td>
+            </tr>
+            <tr>
+              <td>Problemas lineales</td>
+              <td>Sí.</td>
+              <td>Sí.</td>
+            </tr>
+            <tr>
+              <td>Problemas no lineales</td>
+              <td>No puede resolverlos en general.</td>
+              <td>Puede resolverlos.</td>
+            </tr>
+            <tr>
+              <td>Entrenamiento</td>
+              <td>Regla de actualización del perceptrón.</td>
+              <td>Algoritmos como backpropagation.</td>
+            </tr>
+            <tr>
+              <td>Ejemplo</td>
+              <td>Compuerta AND.</td>
+              <td>Compuerta XOR y reconocimiento de imágenes.</td>
+            </tr>
+          </table>
+          <h3 id="backprop">3.3.3. ¿Qué es backpropagation?</h3>
+          <p>
+            <strong>Backpropagation</strong>, o retropropagación del error, es
+            un procedimiento para entrenar redes neuronales multicapa. Calcula
+            cómo contribuye cada peso al error de la predicción y utiliza esa
+            información para ajustar pesos y sesgos.
+          </p>
+          <ol class="steps">
+            <li>La red recibe los datos.</li>
+            <li>Calcula una predicción.</li>
+            <li>Compara la predicción con la respuesta correcta.</li>
+            <li>Calcula el error.</li>
+            <li>
+              Propaga ese error desde la salida hacia las capas anteriores.
+            </li>
+            <li>Ajusta los pesos y sesgos.</li>
+            <li>Repite el proceso para mejorar las predicciones.</li>
+          </ol>
+          <h3>3.3.4. Etapas del algoritmo backpropagation</h3>
+          <h4>Etapa 1. Inicialización de pesos y sesgos</h4>
+          <p>
+            Se asignan valores iniciales a los pesos y sesgos. Generalmente se
+            utilizan valores pequeños, seleccionados mediante métodos de
+            inicialización.
+          </p>
+          <h4>Etapa 2. Propagación hacia adelante (forward propagation)</h4>
+          <p>
+            Los datos pasan desde la capa de entrada hasta la de salida. Cada
+            neurona calcula:
+          </p>
+          <div class="formula">z = Σ (x<sub>i</sub> · w<sub>i</sub>) + b</div>
+          <div class="formula">a = f(z)</div>
+          <p>a es la salida o activación de la neurona.</p>
+          <h4>Etapa 3. Cálculo del error</h4>
+          <p>
+            La red compara su predicción con el resultado esperado. Una función
+            de pérdida sencilla es el error cuadrático medio (MSE):
+          </p>
+          <div class="formula">
+            MSE = (1/n) Σ (y<sub>i</sub> − ŷ<sub>i</sub>)²
+          </div>
+          <p>
+            y<sub>i</sub> es el valor esperado, ŷ<sub>i</sub> el valor predicho
+            y n la cantidad de ejemplos. Cuanto menor sea el MSE, menor será la
+            diferencia cuadrática promedio entre predicciones y valores
+            esperados.
+          </p>
+          <h4>Etapa 4. Retropropagación del error</h4>
+          <p>
+            El algoritmo calcula derivadas de la función de pérdida respecto a
+            pesos y sesgos, utilizando la regla de la cadena del cálculo
+            diferencial. Esto permite determinar cómo modificar cada parámetro
+            para reducir el error.
+          </p>
+          <p>
+            Para una neurona de salida con activación sigmoide y pérdida
+            cuadrática:
+          </p>
+          <div class="formula">δ = (ŷ − y) ŷ(1 − ŷ)</div>
+          <p>Para una neurona oculta:</p>
+          <div class="formula">
+            δ<sub>j</sub> = f′(z<sub>j</sub>) Σ<sub>k</sub> w<sub>jk</sub>δ<sub
+              >k</sub
+            >
+          </div>
+          <p>
+            Estas expresiones representan el error local de cada neurona. La
+            segunda utiliza los errores de las neuronas de la siguiente capa
+            para calcular cuánto contribuye la neurona actual al error final.
+          </p>
+          <h4>Etapa 5. Actualización de pesos</h4>
+          <p>Los pesos se ajustan mediante descenso del gradiente:</p>
+          <div class="formula">
+            w<sup>nuevo</sup> = w<sup>anterior</sup> − η (∂L / ∂w)
+          </div>
+          <p>Para el sesgo:</p>
+          <div class="formula">
+            b<sup>nuevo</sup> = b<sup>anterior</sup> − η (∂L / ∂b)
+          </div>
+          <p>
+            w = peso; b = sesgo; η = tasa de aprendizaje; L = función de
+            pérdida; ∂L/∂w = derivada de la pérdida respecto al peso.
+          </p>
+          <h4>Etapa 6. Repetición del entrenamiento</h4>
+          <p>
+            El procedimiento se repite durante varias épocas hasta que el error
+            disminuya suficientemente o se alcance otro criterio de detención.
+          </p>
+          <h3>3.3.5. ¿Qué es la tasa de aprendizaje?</h3>
+          <p>
+            La tasa de aprendizaje (learning rate) determina el tamaño de los
+            pasos para actualizar los pesos.
+          </p>
+          <ul>
+            <li>Una tasa muy pequeña puede provocar entrenamiento lento.</li>
+            <li>
+              Una tasa muy grande puede provocar que el entrenamiento no
+              converja o que el error aumente.
+            </li>
+            <li>
+              Una tasa adecuada permite que los parámetros se ajusten
+              progresivamente.
+            </li>
+          </ul>
+          <p>
+            La tasa no garantiza por sí sola que la red encuentre la mejor
+            solución; también influyen arquitectura, datos, inicialización y
+            algoritmo de optimización.
+          </p>
+          <h3 id="ejxor">
+            3.3.6. Ejemplo práctico: red neuronal para aprender XOR
+          </h3>
+          <p>
+            <strong>Problema:</strong> desarrollar una red que aprenda XOR. XOR
+            devuelve 1 cuando sus dos entradas son diferentes y 0 cuando son
+            iguales.
+          </p>
+          <table>
+            <tr>
+              <th>Entrada A</th>
+              <th>Entrada B</th>
+              <th>Resultado esperado</th>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>1</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>0</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>1</td>
+              <td>0</td>
+            </tr>
+          </table>
+          <p>
+            <strong>Arquitectura:</strong> 2 neuronas de entrada, 4 neuronas en
+            una capa oculta, 1 neurona de salida, función sigmoide y
+            entrenamiento mediante backpropagation.
+          </p>
+          <div class="figure">
+    <img src="img/redneuronalXOR.jpg" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+    <figcaption>Red Neuronal XOR.</figcaption>
+ </div>
+          <div class="note">
+            Este ejemplo implementa los cálculos principales de una red neuronal
+            y backpropagation con NumPy, sin depender de bibliotecas
+            especializadas de inteligencia artificial.
+          </div>
+          <h4>1. Instalar NumPy</h4>
+          <pre><code>pip install numpy</code></pre>
+          <h4>2. Crear el archivo red_xor.py</h4>
+          <div class="codehead">
+            <strong>Código completo en Python</strong
+            ><button class="btn" onclick="copiarCodigo()">Copiar código</button>
+          </div>
+          <pre id="codigo"><code>import numpy as np
+
+# 1. DATOS DE ENTRENAMIENTO
+X = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+y = np.array([
+    [0],
+    [1],
+    [1],
+    [0]
+])
+
+# 2. CONFIGURACIÓN DE LA RED
+np.random.seed(42)
+
+# Pesos entre entrada y capa oculta
+W1 = np.random.randn(2, 4)
+b1 = np.zeros((1, 4))
+
+# Pesos entre capa oculta y salida
+W2 = np.random.randn(4, 1)
+b2 = np.zeros((1, 1))
+
+learning_rate = 0.5
+epochs = 10000
+
+# 3. FUNCIÓN DE ACTIVACIÓN SIGMOIDE
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Derivada de la sigmoide usando su salida
+def sigmoid_derivative(x):
+    return x * (1 - x)
+
+# 4. ENTRENAMIENTO DE LA RED
+for epoch in range(epochs):
+
+    # PROPAGACIÓN HACIA ADELANTE
+    z1 = np.dot(X, W1) + b1
+    a1 = sigmoid(z1)
+
+    z2 = np.dot(a1, W2) + b2
+    output = sigmoid(z2)
+
+    # CÁLCULO DEL ERROR
+    error = y - output
+    loss = np.mean(error ** 2)
+
+    # RETROPROPAGACIÓN DEL ERROR
+    delta_output = (
+        error * sigmoid_derivative(output)
+    )
+
+    delta_hidden = (
+        np.dot(delta_output, W2.T)
+        * sigmoid_derivative(a1)
+    )
+
+    # ACTUALIZACIÓN DE PESOS Y SESGOS
+    W2 += learning_rate * np.dot(a1.T, delta_output)
+    b2 += learning_rate * np.sum(
+        delta_output, axis=0, keepdims=True
+    )
+
+    W1 += learning_rate * np.dot(X.T, delta_hidden)
+    b1 += learning_rate * np.sum(
+        delta_hidden, axis=0, keepdims=True
+    )
+
+    if epoch % 1000 == 0:
+        print("Época:", epoch, "Error:", loss)
+
+# 5. EVALUACIÓN DE LA RED
+print("\\nRESULTADOS DE LA RED NEURONAL")
+
+a1 = sigmoid(np.dot(X, W1) + b1)
+predicciones = sigmoid(np.dot(a1, W2) + b2)
+
+for i in range(len(X)):
+    resultado = predicciones[i][0]
+    print(
+        "Entrada:", X[i],
+        "Predicción:", round(resultado, 4),
+        "Clase:", int(resultado >= 0.5),
+        "Esperado:", y[i][0]
+    )</code></pre>
+          <h4>3. Ejecutar el programa</h4>
+          <pre><code>python red_xor.py</code></pre>
+          <h4>4. ¿Qué hace el programa?</h4>
+          <table>
+            <tr>
+              <th>Sección</th>
+              <th>Descripción</th>
+            </tr>
+            <tr>
+              <td>Datos de entrenamiento</td>
+              <td>Contiene las cuatro combinaciones de XOR.</td>
+            </tr>
+            <tr>
+              <td>Configuración</td>
+              <td>Define neuronas, pesos y sesgos.</td>
+            </tr>
+            <tr>
+              <td>Sigmoide</td>
+              <td>Convierte valores en salidas entre 0 y 1.</td>
+            </tr>
+            <tr>
+              <td>Propagación hacia adelante</td>
+              <td>Calcula las predicciones.</td>
+            </tr>
+            <tr>
+              <td>Cálculo del error</td>
+              <td>Compara predicciones con respuestas esperadas.</td>
+            </tr>
+            <tr>
+              <td>Backpropagation</td>
+              <td>Calcula los ajustes necesarios para los parámetros.</td>
+            </tr>
+            <tr>
+              <td>Actualización</td>
+              <td>Modifica pesos y sesgos para reducir el error.</td>
+            </tr>
+            <tr>
+              <td>Evaluación</td>
+              <td>Muestra las predicciones finales.</td>
+            </tr>
+          </table>
+          <h4>5. Resultado esperado</h4>
+          <p>
+            Después del entrenamiento, las predicciones deberían aproximarse a
+            estos valores:
+          </p>
+          <table>
+            <tr>
+              <th>Entrada</th>
+              <th>Predicción aproximada</th>
+              <th>Clase</th>
+            </tr>
+            <tr>
+              <td>0, 0</td>
+              <td>Cercana a 0</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>0, 1</td>
+              <td>Cercana a 1</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1, 0</td>
+              <td>Cercana a 1</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td>1, 1</td>
+              <td>Cercana a 0</td>
+              <td>0</td>
+            </tr>
+          </table>
+          <p>
+            Los valores exactos dependen de la inicialización y del
+            entrenamiento. El programa utiliza una inicialización fija para
+            facilitar resultados reproducibles.
+          </p>
+          <h3 id="evaluacion">
+            3.3.7. ¿Cómo saber si una red neuronal está aprendiendo?
+          </h3>
+          <p>
+            Durante el entrenamiento es importante observar la función de
+            pérdida.
+          </p>
+          <figure>
+            <svg
+              viewBox="0 0 700 280"
+              role="img"
+              aria-label="Curva de aprendizaje: error disminuye con las épocas"
+            >
+              <path
+                d="M65 20V235H665"
+                stroke="#526d86"
+                stroke-width="2"
+                fill="none"
+              />
+              <path
+                d="M70 40 C120 80 150 145 220 170 S330 205 420 215 S560 220 655 222"
+                fill="none"
+                stroke="#087f8c"
+                stroke-width="4"
+              />
+              <g fill="#203047" font-size="16">
+                <text x="12" y="25">Error</text>
+                <text x="310" y="270">Épocas de entrenamiento</text>
+                <text x="70" y="255">0</text>
+                <text x="625" y="255">Más</text>
+              </g>
+            </svg>
+            <figcaption>
+              Ejemplo conceptual de una curva de aprendizaje: el error disminuye
+              conforme avanzan las épocas.
+            </figcaption>
+          </figure>
+          <p>
+            Si el error disminuye progresivamente, puede ser señal de que la red
+            aprende patrones del conjunto de entrenamiento. Sin embargo, un
+            error bajo en entrenamiento no garantiza que funcione bien con datos
+            nuevos.
+          </p>
+          <div class="grid2">
+            <div class="card">
+              <h4>Subajuste (underfitting)</h4>
+              <p>
+                La red no aprende suficientemente los patrones de los datos.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Sobreajuste (overfitting)</h4>
+              <p>
+                La red aprende demasiado bien los ejemplos de entrenamiento,
+                pero tiene dificultades con datos nuevos.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Conjunto de entrenamiento</h4>
+              <p>Datos utilizados para ajustar los parámetros.</p>
+            </div>
+            <div class="card">
+              <h4>Conjunto de validación</h4>
+              <p>
+                Datos para evaluar y ajustar decisiones durante el desarrollo.
+              </p>
+            </div>
+            <div class="card">
+              <h4>Conjunto de prueba</h4>
+              <p>Datos reservados para evaluar el rendimiento final.</p>
+            </div>
+            <div class="card">
+              <h4>Generalización</h4>
+              <p>
+                Capacidad de obtener buenos resultados con datos no vistos
+                durante el entrenamiento.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="aplicaciones">
+          <h2>3.4. Aplicaciones de las redes neuronales</h2>
+          <p>
+            Se utilizan en diferentes sectores por su capacidad para identificar
+            patrones y realizar predicciones.
+          </p>
+          <div class="grid2">
+            <div class="card">
+              <h4>🎓 Educación</h4>
+              <p>
+                Predicción del rendimiento académico; identificar estudiantes
+                que podrían necesitar asesorías.
+              </p>
+            </div>
+            <div class="card">
+              <h4>🩺 Medicina</h4>
+              <p>
+                Análisis de imágenes médicas; detectar patrones en radiografías.
+              </p>
+            </div>
+            <div class="card">
+              <h4>🔐 Seguridad</h4>
+              <p>
+                Reconocimiento facial; identificar rostros en sistemas de
+                acceso.
+              </p>
+            </div>
+            <div class="card">
+              <h4>💳 Finanzas</h4>
+              <p>
+                Detección de operaciones sospechosas; identificar transacciones
+                posiblemente fraudulentas.
+              </p>
+            </div>
+            <div class="card">
+              <h4>🚗 Transporte</h4>
+              <p>
+                Reconocimiento de objetos; identificar peatones y vehículos.
+              </p>
+            </div>
+            <div class="card">
+              <h4>🛒 Comercio</h4>
+              <p>
+                Sistemas de recomendación; sugerir productos según preferencias.
+              </p>
+            </div>
+            <div class="card">
+              <h4>🏭 Industria</h4>
+              <p>
+                Mantenimiento predictivo; identificar posibles fallas en
+                maquinaria.
+              </p>
+            </div>
+            <div class="card">
+              <h4>🎙️ Comunicación</h4>
+              <p>
+                Reconocimiento de voz; convertir instrucciones habladas en
+                texto.
+              </p>
+            </div>
+          </div>
+          <h3>3.4.1. Ventajas de las redes neuronales</h3>
+          <ol>
+            <li>Pueden aprender patrones complejos.</li>
+            <li>Se adaptan a diferentes tipos de problemas.</li>
+            <li>Pueden procesar grandes cantidades de información.</li>
+            <li>Permiten realizar predicciones.</li>
+            <li>Pueden mejorar su desempeño mediante entrenamiento.</li>
+            <li>
+              Son útiles para trabajar con imágenes, audio, texto y datos
+              numéricos.
+            </li>
+          </ol>
+          <h3>3.4.2. Desventajas y limitaciones</h3>
+          <ol>
+            <li>Necesitan datos suficientes y representativos.</li>
+            <li>
+              Su entrenamiento puede requerir muchos recursos computacionales.
+            </li>
+            <li>Pueden producir resultados incorrectos.</li>
+            <li>Es difícil interpretar algunas de sus decisiones.</li>
+            <li>Pueden aprender sesgos presentes en los datos.</li>
+            <li>
+              Requieren seleccionar adecuadamente su arquitectura y parámetros.
+            </li>
+          </ol>
+          <div class="figure">
+    <img src="img/Aplicacionredneuronal.png" class="imagen-tema" alt="Diferencia de transiciones entre la lógica booleana y la lógica difusa">
+    <figcaption>Aplicaciones de las redes neuronales.</figcaption>
+ </div>
+        </section>
+        <section id="resumen">
+          <h2>Resumen y Bibliografía</h2>
+          <div class="callout">
+            <strong>Conclusión:</strong> las redes neuronales artificiales
+            permiten desarrollar sistemas capaces de aprender a partir de
+            ejemplos. El perceptrón representa una introducción al aprendizaje
+            neuronal, mientras que las redes multicapa y backpropagation
+            permiten resolver problemas más complejos, como reconocimiento de
+            imágenes, clasificación de información y predicción de resultados.
+          </div>
+          <h3>Bibliografía y recursos para profundizar</h3>
+          <ol>
+            <li>
+              Haykin, S. (1999).
+              <em>Neural Networks: A Comprehensive Foundation</em>. Prentice
+              Hall.
+            </li>
+            <li>
+              Goodfellow, I., Bengio, Y., y Courville, A. (2016).
+              <em>Deep Learning</em>. MIT Press.
+              <a
+                href="https://www.deeplearningbook.org/"
+                target="_blank"
+                rel="noopener"
+                >Consultar libro en línea</a
+              >.
+            </li>
+            <li>
+              Google. <em>Machine Learning Crash Course</em>.
+              <a
+                href="https://developers.google.com/machine-learning/crash-course"
+                target="_blank"
+                rel="noopener"
+                >Curso de aprendizaje automático</a
+              >.
+            </li>
+            <li>
+              TensorFlow.
+              <a
+                href="https://www.tensorflow.org/learn"
+                target="_blank"
+                rel="noopener"
+                >Tutoriales de aprendizaje automático</a
+              >.
+            </li>
+            <li>
+              NumPy.
+              <a href="https://numpy.org/doc/" target="_blank" rel="noopener"
+                >Documentación oficial de NumPy</a
+              >.
+            </li>
+          </ol>
+          <div class="note">
+            <strong>Recomendación didáctica:</strong> conviene desarrollar
+            primero el perceptrón con ejemplos manuales y compuertas AND/OR;
+            posteriormente, utilizar XOR para demostrar por qué se necesitan
+            capas ocultas. Así los estudiantes comprenderán el problema que
+            resuelve backpropagation antes de trabajar con redes neuronales más
+            grandes.
+          </div>
+        </section>
+        <section id="autoevaluacion">
+          <h2>Autoevaluación interactiva</h2>
+          <p>
+            Selecciona una respuesta por pregunta y presiona “Calificar” para
+            comprobar lo aprendido.
+          </p>
+          <form id="quiz">
+            <div class="quizq">
+              <strong
+                >1. ¿Qué representan los pesos en una neurona
+                artificial?</strong
+              ><label
+                ><input type="radio" name="q1" value="a" /> El número de
+                capas.</label
+              ><label
+                ><input type="radio" name="q1" value="b" /> La importancia de
+                cada entrada.</label
+              ><label
+                ><input type="radio" name="q1" value="c" /> La cantidad de
+                ejemplos.</label
+              >
+            </div>
+            <div class="quizq">
+              <strong
+                >2. ¿Qué tipo de aprendizaje utiliza entradas acompañadas de
+                respuestas esperadas?</strong
+              ><label
+                ><input type="radio" name="q2" value="a" /> Aprendizaje
+                supervisado.</label
+              ><label
+                ><input type="radio" name="q2" value="b" /> Aprendizaje no
+                supervisado.</label
+              ><label
+                ><input type="radio" name="q2" value="c" /> Programación
+                estática.</label
+              >
+            </div>
+            <div class="quizq">
+              <strong>3. ¿Cuál es una limitación del perceptrón simple?</strong
+              ><label
+                ><input type="radio" name="q3" value="a" /> No puede sumar
+                entradas.</label
+              ><label
+                ><input type="radio" name="q3" value="b" /> No puede resolver en
+                general problemas no linealmente separables como XOR.</label
+              ><label
+                ><input type="radio" name="q3" value="c" /> No utiliza
+                pesos.</label
+              >
+            </div>
+            <div class="quizq">
+              <strong>4. ¿Para qué sirve backpropagation?</strong
+              ><label
+                ><input type="radio" name="q4" value="a" /> Dibujar la
+                arquitectura.</label
+              ><label
+                ><input type="radio" name="q4" value="b" /> Ordenar datos
+                alfabéticamente.</label
+              ><label
+                ><input type="radio" name="q4" value="c" /> Calcular gradientes
+                y ajustar pesos para reducir el error.</label
+              >
+            </div>
+            <div class="quizq">
+              <strong>5. ¿Qué es una época?</strong
+              ><label
+                ><input type="radio" name="q5" value="a" /> Una pasada completa
+                por el conjunto de entrenamiento.</label
+              ><label
+                ><input type="radio" name="q5" value="b" /> Una función de
+                activación.</label
+              ><label
+                ><input type="radio" name="q5" value="c" /> Un peso de
+                salida.</label
+              >
+            </div>
+            <button class="btn" type="submit">Calificar respuestas</button>
+            <button
+              class="btn"
+              type="button"
+              onclick="
+                document.getElementById('quiz').reset();
+                document.getElementById('result').textContent = '';
+              "
+            >
+              Reiniciar
+            </button>
+            <p id="result" aria-live="polite"></p>
+          </form>
+        </section>
+      </main>
+    </div>
+    <footer>
+      <strong>Cómputo Suave · Unidad 3. Redes Neuronales</strong><br />Material
+      didáctico de apoyo para el estudio y la práctica.
+    </footer>
+    <button
+      class="top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      aria-label="Volver al inicio"
+    >
+      ↑
+    </button>
+    <script>
+      const links = [...document.querySelectorAll("nav a")];
+      const sections = links
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting)
+              links.forEach((a) =>
+                a.classList.toggle(
+                  "active",
+                  a.getAttribute("href") === "#" + e.target.id,
+                ),
+              );
+          }),
+        { rootMargin: "-18% 0px -70% 0px" },
+      );
+      sections.forEach((s) => observer.observe(s));
+      function copiarCodigo() {
+        const t = document.querySelector("#codigo code").innerText;
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(t).then(() => alert("Código copiado."));
+        } else {
+          const a = document.createElement("textarea");
+          a.value = t;
+          document.body.appendChild(a);
+          a.select();
+          document.execCommand("copy");
+          a.remove();
+          alert("Código copiado.");
+        }
+      }
+      document.getElementById("quiz").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const key = { q1: "b", q2: "a", q3: "b", q4: "c", q5: "a" };
+        let n = 0;
+        Object.keys(key).forEach((k) => {
+          const v = e.currentTarget.querySelector(
+            'input[name="' + k + '"]:checked',
+          );
+          if (v && v.value === key[k]) n++;
+        });
+        const r = document.getElementById("result");
+        r.textContent =
+          "Obtuviste " + n + " de 5 respuestas correctas (" + n * 20 + "%).";
+        r.style.color = n >= 4 ? "#16845b" : "#a45b12";
+      });
+    </script>
+  </body>
+</html>
